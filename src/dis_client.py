@@ -171,6 +171,29 @@ def _parse_fund_search_rows(root: ET.Element) -> list[dict[str, str]]:
     return rows
 
 
+def _fund_name_similarity(fnd_nm: str, korean_fund_nm: str) -> int:
+    target = _normalize_name(fnd_nm)
+    cand = _normalize_name(korean_fund_nm)
+    if not target or not cand:
+        return 0
+    if target == cand:
+        return 1000
+    if target in cand:
+        return 800 + len(target)
+    if cand in target:
+        return 700
+    score = 0
+    for n in range(min(len(target), 28), 3, -1):
+        for i in range(0, len(target) - n + 1):
+            chunk = target[i : i + n]
+            if chunk in cand:
+                score = max(score, n * 4)
+    for tag in ("classc-e", "c-e", "classce", "ae", "re", "ce"):
+        if tag in target and tag in cand:
+            score += 15
+    return score
+
+
 def pick_fund_row(
     rows: list[dict[str, str]],
     fnd_nm: str,
@@ -178,32 +201,28 @@ def pick_fund_row(
     srtn_cd_hint: str | None = None,
     alias: str | None = None,
 ) -> dict[str, str] | None:
-    """Pick best match: config srtn_cd > exact name > alias tokens > first row."""
+    """Pick best match: config srtn_cd hint, then highest koreanFundNm similarity."""
     if not rows:
         return None
-    if srtn_cd_hint and not alias:
+    if srtn_cd_hint:
         for row in rows:
             if row.get("standardCd") == srtn_cd_hint:
                 return row
-    target = _normalize_name(fnd_nm)
-    exact = [r for r in rows if _normalize_name(r.get("koreanFundNm", "")) == target]
-    if exact:
-        return exact[0]
-    partial = [r for r in rows if target and target in _normalize_name(r.get("koreanFundNm", ""))]
-    if partial:
-        return partial[0]
-    if alias:
-        tokens = _alias_search_tokens(alias, fnd_nm)
-        scored = []
-        for row in rows:
-            nm = _normalize_name(row.get("koreanFundNm", ""))
-            score = sum(1 for t in tokens if t in nm)
-            if score:
-                scored.append((score, row))
-        if scored:
-            scored.sort(key=lambda x: -x[0])
-            return scored[0][1]
-    return rows[0]
+
+    alias_tokens = _alias_search_tokens(alias or "", fnd_nm)
+
+    def score_row(row: dict[str, str]) -> int:
+        base = _fund_name_similarity(fnd_nm, row.get("koreanFundNm", ""))
+        nm = _normalize_name(row.get("koreanFundNm", ""))
+        base += sum(20 for t in alias_tokens if t in nm)
+        return base
+
+    scored = [(score_row(r), r) for r in rows]
+    scored.sort(key=lambda x: -x[0])
+    best_score, best_row = scored[0]
+    if best_score < 40:
+        return None
+    return best_row
 
 
 def _alias_search_tokens(alias: str, fnd_nm: str) -> list[str]:
@@ -217,16 +236,74 @@ def _alias_search_tokens(alias: str, fnd_nm: str) -> list[str]:
     return tokens
 
 
+_MANAGER_PREFIXES: tuple[str, ...] = (
+    "한국투자",
+    "한국밸류",
+    "미래에셋",
+    "삼성",
+    "신한",
+    "한화",
+    "우리",
+    "유진",
+    "유리",
+    "유경",
+    "카디안",
+    "NH-Amundi",
+    "NH",
+    "KB",
+)
+
+_DISTINCTIVE_KEYWORDS: tuple[str, ...] = (
+    "배당귀족",
+    "헬스케어",
+    "롱숏",
+    "거래소",
+    "크레딧포커스",
+    "하이일드",
+    "인도채권",
+    "다이나믹",
+    "달러우량",
+    "국채10년",
+    "ABF코리아",
+    "중단기채",
+    "브라질",
+    "Commodity",
+    "로저스",
+    "OCIO",
+    "누버거버먼",
+    "리츠",
+    "뱅크론",
+    "러-브",
+    "공모주",
+    "삼성전자",
+)
+
+
 def search_query_for_fund(fnd_nm: str, alias: str | None = None) -> str:
-    """ProFrame search keyword — full name often returns 0 rows; use short token."""
+    """ProFrame search keyword — full fund name often returns 0 rows; use operator/keyword."""
     alias_l = (alias or "").lower()
     if alias_l == "tdf2050_ce" or "tdf2050" in alias_l:
         return "TDF2050"
     if "TDF" in fnd_nm.upper() or (alias and "TDF" in alias.upper()):
         if "미래" in fnd_nm or "미래에셋" in fnd_nm:
-            return "미래에셋 TDF2050"
+            return "미래에셋"
         return "TDF2050"
-    return fnd_nm[:30] if len(fnd_nm) > 30 else fnd_nm
+
+    manager: str | None = None
+    for prefix in _MANAGER_PREFIXES:
+        if fnd_nm.startswith(prefix) or prefix in fnd_nm[: min(20, len(fnd_nm))]:
+            manager = "NH" if prefix.startswith("NH") else prefix
+            break
+
+    if manager:
+        return manager
+
+    for kw in _DISTINCTIVE_KEYWORDS:
+        if kw in fnd_nm:
+            return kw
+
+    compact = fnd_nm.replace(" ", "")[:12]
+    return compact if len(compact) >= 4 else fnd_nm[:12]
 
 
 def _normalize_name(name: str) -> str:
