@@ -7,10 +7,11 @@ venv/
 .env
 .env.*
 
-# Spike / cache (not in release bundle)
+# Local / generated
 scripts/
 data/logs/
-!data/logs/.gitkeep
+data/timeseries/*.csv
+!data/timeseries/.gitkeep
 
 # IDE
 .idea/

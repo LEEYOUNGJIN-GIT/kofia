@@ -2,7 +2,7 @@
 
 > **이 파일이 펀드 화이트리스트의 기준입니다.**  
 > 표를 수정한 뒤 GitHub Actions **「Sync fund list and fetch」** 를 실행하면  
-> `config/fund_list.yaml` 이 갱신되고, `enabled: true` 인 펀드만 dis 수집이 돌아갑니다.
+> `config/fund_list.yaml` 이 갱신된 뒤, Actions 기본 설정으로 **표에 등록된 펀드 전체** dis 수집이 돌아갑니다 (`enabled_only` 로 일부만 제한 가능).
 
 ## 운영 절차
 
@@ -15,8 +15,6 @@
 |------|------|
 | 펀드 목록 편집 | **본 문서** (`holdings_fund_list.md`) |
 | 파서·CI 설정 | `config/fund_list.yaml` (자동 생성·병합) |
-| 표준코드 조회 | `python src/resolve_srtn.py` (선택) |
-
 ### 표 컬럼
 
 | 컬럼 | 설명 |
@@ -26,7 +24,7 @@
 | `유형` | 참고용 (`fnd_tp`) |
 | `srtn_cd` | 12자리 표준코드 (비우면 기존 YAML 값 유지) |
 | `alias` | CSV·CLI 식별자 (비우면 자동 생성) |
-| `enabled` | `true` = 수집 대상, `false` = 스킵 |
+| `enabled` | `true`/`false` — 로컬 `--fetch`·`enabled_only` GHA 입력 시 필터; 기본 GHA fetch는 표 전체 |
 
 표에서 **삭제한 펀드**는 YAML에 남고 `enabled: false` 로 표시된다 (이력·`srtn_cd` 보존).
 
@@ -34,15 +32,15 @@
 
 ## 요약
 
-| 항목 | 값 |
-|------|-----|
-| 일반펀드 (표 등록) | **34** |
+| 항목 | 설명 |
+|------|------|
+| 일반펀드 | 아래 표 행 수 = `fund_list.yaml` 펀드 수 (추가·삭제 가능) |
 | 펀드 외 | 발행어음 — 파이프라인 제외 |
-| `srtn_cd` | 표·`resolve_srtn.py` 로 확정 |
+| `srtn_cd` | 12자리 표준코드 (비우면 fetch 시 펀드명 검색으로 매칭) |
 
 ---
 
-## 일반펀드 (34)
+## 일반펀드
 
 유형은 펀드명 기준 **추정**이다.
 
@@ -105,5 +103,5 @@
 
 | 날짜 | 변경 |
 |------|------|
-| 2026-05-29 | 최초 34종 |
+| 2026-05-29 | 최초 목록 등록 |
 | 2026-05-29 | holdings → YAML sync + GHA 파이프라인 |

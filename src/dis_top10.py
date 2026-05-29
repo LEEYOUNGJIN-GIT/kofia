@@ -16,7 +16,7 @@ def top10_from_bs(
 ) -> list[dict[str, Any]]:
     """
     Rank non-zero BS asset-side accounts by amount (proxy for 보유 top10).
-    Not individual securities — use pdf_parse when PDF URL is available.
+    Not individual securities — BS account lines only (proxy).
     """
     _, labels = load_asset_class_map()
     bas_dt = bs.get("standardDt") or ""

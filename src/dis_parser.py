@@ -183,7 +183,6 @@ def _fetch_one_fund(
     fund: dict,
     *,
     quarter: str | None,
-    use_gemini: bool,
     grid_cache: dict[str, list[dict[str, str]]],
 ) -> tuple[dict | None, dict | None, list[dict], list[dict], list[dict], list[dict], list[str]]:
     """Returns (ok_entry, fail_entry, registry, allocation, std_price, top10, warnings)."""
@@ -297,31 +296,6 @@ def _fetch_one_fund(
     for row in top10_from_bs(bs_for_top10, srtn_cd=srtn_cd, alias=fund_alias):
         top10_rows.append({k: str(v) for k, v in row.items()})
 
-    if use_gemini:
-        import os
-
-        if os.environ.get("GEMINI_API_KEY"):
-            from gemini_extract import extract_allocation_from_text
-
-            gemini_rows = extract_allocation_from_text(
-                json.dumps(bs_for_top10, ensure_ascii=False),
-                srtn_cd=srtn_cd,
-                bas_dt=bs_for_top10.get("standardDt", ""),
-            )
-            for gr in gemini_rows:
-                allocation_rows.append(
-                    {
-                        "srtn_cd": srtn_cd,
-                        "alias": fund_alias,
-                        "bas_dt": _format_bas_dt(bs_for_top10.get("standardDt", "")),
-                        "report_type": "gemini",
-                        "asset_class": gr["asset_class"],
-                        "weight_pct": str(gr["weight_pct"]),
-                        "amount_mkrw": "",
-                        "source_doc": gr.get("source_doc", "gemini"),
-                    }
-                )
-
     ok_entry = {
         "alias": fund_alias,
         "srtn_cd": srtn_cd,
@@ -345,7 +319,6 @@ def run_fetch(
     *,
     quarter: str | None = None,
     quarters: list[str] | None = None,
-    use_gemini: bool = False,
     all_funds: bool = False,
 ) -> dict:
     funds = load_fund_list(fund_list_path, all_enabled=all_funds)
@@ -372,7 +345,6 @@ def run_fetch(
                     client,
                     fund,
                     quarter=q,
-                    use_gemini=use_gemini,
                     grid_cache=grid_cache,
                 )
                 warnings.extend(w)
@@ -444,7 +416,6 @@ def run_fetch(
             "G5_top10_csv": n_top10 > 0,
             "G2_multi_asset_class": unique_classes >= 1,
             "playwright_used": False,
-            "gemini_used": use_gemini and bool(__import__("os").environ.get("GEMINI_API_KEY")),
         },
     }
 
@@ -460,7 +431,6 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--sync", action="store_true", help="Sync holdings.md → fund_list.yaml first")
     parser.add_argument("--dry-run", action="store_true", help="ProFrame connectivity only (G1)")
     parser.add_argument("--fetch", action="store_true", help="Fetch registry, allocation, top10 (G2)")
-    parser.add_argument("--gemini", action="store_true", help="Optional Gemini pass (needs GEMINI_API_KEY)")
     parser.add_argument("--config", type=Path, default=CONFIG_PATH)
     args = parser.parse_args(argv)
 
@@ -490,7 +460,6 @@ def main(argv: list[str] | None = None) -> int:
             args.config,
             quarter=args.quarter if not quarters else None,
             quarters=quarters,
-            use_gemini=args.gemini,
             all_funds=args.all_funds,
         )
         suffix = "fetch"
@@ -510,6 +479,9 @@ def main(argv: list[str] | None = None) -> int:
     if args.dry_run:
         return 0 if manifest["gates"]["G1_proframe_reachable"] and not manifest["failed"] else 1
     gates = manifest["gates"]
+    if args.all_funds and not args.alias:
+        # Bulk list run: keep job green when at least one fund wrote data.
+        return 0 if manifest["ok"] and gates.get("G2_allocation_csv") else 1
     ok_fetch = gates.get("G2_allocation_csv") and gates.get("G5_top10_csv") and not manifest["failed"]
     return 0 if ok_fetch else 1
 

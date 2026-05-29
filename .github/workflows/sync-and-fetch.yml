@@ -8,9 +8,13 @@ on:
         type: boolean
         default: false
       alias:
-        description: "Single fund alias (empty = all enabled in fund_list.yaml)"
+        description: "Single fund alias (empty = fetch all listed funds)"
         required: false
         default: ""
+      enabled_only:
+        description: "If true, fetch only enabled: true rows (default: entire fund_list.yaml)"
+        type: boolean
+        default: false
       quarter:
         description: "Quarter e.g. 2025Q3 (optional)"
         required: false
@@ -21,10 +25,6 @@ on:
         default: true
       commit_data:
         description: "Commit timeseries CSV after fetch"
-        type: boolean
-        default: false
-      use_gemini:
-        description: "Optional Gemini pass on fetch"
         type: boolean
         default: false
   push:
@@ -38,7 +38,7 @@ permissions:
 jobs:
   pipeline:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
 
@@ -64,20 +64,23 @@ jobs:
             git push
           fi
 
-      - name: Fetch dis data (enabled funds)
+      - name: Fetch dis data (all listed funds)
         if: github.event_name == 'push' || github.event.inputs.sync_only != 'true'
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           ARGS="src/dis_parser.py --fetch"
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.alias }}" ]; then
-            ARGS="$ARGS --alias ${{ github.event.inputs.alias }}"
+          ALIAS=""
+          ENABLED_ONLY="false"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            ALIAS="${{ github.event.inputs.alias }}"
+            ENABLED_ONLY="${{ github.event.inputs.enabled_only }}"
+          fi
+          if [ -n "$ALIAS" ]; then
+            ARGS="$ARGS --alias $ALIAS"
+          elif [ "$ENABLED_ONLY" != "true" ]; then
+            ARGS="$ARGS --all-funds"
           fi
           if [ -n "${{ github.event.inputs.quarter }}" ]; then
             ARGS="$ARGS --quarter ${{ github.event.inputs.quarter }}"
-          fi
-          if [ "${{ github.event.inputs.use_gemini }}" = "true" ]; then
-            ARGS="$ARGS --gemini"
           fi
           python $ARGS
 
