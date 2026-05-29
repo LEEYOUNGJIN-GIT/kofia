@@ -102,8 +102,13 @@ class DisProframeClient:
         *,
         bas_dt: str = "",
     ) -> list[dict[str, str]]:
-        """DISFundStdPriceSO — 펀드 기준가 목록 (selectMeta rows)."""
+        """DISFundStdPriceSO — 펀드 기준가 목록 (selectMeta rows). tmpV30 required."""
         from dis_grid import parse_select_meta_rows
+        from dis_std_price import month_end_dates_back
+
+        bas = bas_dt.replace("-", "") if bas_dt else ""
+        if not bas:
+            bas = month_end_dates_back("", 1)[0]
 
         root = self.call(
             "FS-DIS2",
@@ -111,7 +116,7 @@ class DisProframeClient:
             "select",
             "DISCondFuncDTO",
             {
-                "tmpV30": bas_dt.replace("-", "") if bas_dt else "",
+                "tmpV30": bas,
                 "tmpV12": search_keyword,
                 "tmpV3": "",
                 "tmpV4": "",

@@ -1,27 +1,46 @@
-# SPIKE: top10 data sources (HTTP only)
+# SPIKE: disclosed holdings (variable length)
 
-## ProFrame (primary)
+## Parsing goal
 
-| SO | fn | inDto | Notes |
-|----|-----|-------|-------|
-| DISStandValInqSO | inquiryStandVal | DISStandValDTO | Settlement report stand val |
-| DISTradeInqSO | inquiryTrade | DISTradeDTO | Trade inquiry |
-| DISmetaRowDynm10SO | select | DISmetaRowInputListDTO | Dynamic report rows |
+Collect **all rows** in public disclosure tables (main holdings + 5%/1% footnotes), not a fixed top 10.
 
-Parser: [`src/dis_holdings.py`](../src/dis_holdings.py) — list rows with name + weight heuristics.
+JSON field: `holdings` (array, `holdings_count`). `top10` is a deprecated alias of the same array.
 
-## Gemini (optional, no Playwright)
+## Fallback order
 
-When SO returns no rows and `--gemini` + `GEMINI_API_KEY`:
+| Step | Source | Flag / config |
+|------|--------|----------------|
+| 1 | KOFIA ProFrame SO | always |
+| 2 | KOFIA 첨부 + Gemini | `--gemini`, `GEMINI_API_KEY` |
+| 3 | DART `document.xml` (+ optional Gemini) | `--dart`, `OPENDART_API_KEY`, optional `dart_corp_code` |
+| 4 | funddoctor report HTML | `--funddoctor`, `funddoctor.memb_cd` / `pfund_cd` in yaml |
 
-1. `DISFTimeAnnSO` → attachment URL (best-effort)
-2. `requests` download PDF/HTML → text
-3. `gemini_extract.extract_top10_from_report_text`
+Code: [`src/dis_holdings.py`](../src/dis_holdings.py) → `resolve_holdings()`.
 
-## BS top10_bs (always)
+## ProFrame (step 1)
 
-`DISFundSetRptBSSO` → [`top10_bs_from_bs`](../src/dis_top10.py) — account lines, not securities.
+| SO | fn | inDto |
+|----|-----|-------|
+| DISStandValInqSO | inquiryStandVal | DISStandValDTO |
+| DISTradeInqSO | inquiryTrade | DISTradeDTO |
+| DISmetaRowDynm10SO | select | DISmetaRowInputListDTO |
+
+## BS top10_bs (separate, always)
+
+`DISFundSetRptBSSO` → account-line proxy, not securities — [`dis_top10.py`](../src/dis_top10.py).
+
+## fund_list.yaml (optional)
+
+```yaml
+- alias: TDF2050_Ce
+  fnd_nm: ...
+  srtn_cd: K55301D51271
+  dart_corp_code: ""   # optional, speeds DART search
+  funddoctor:
+    memb_cd: "7301"
+    pfund_cd: "01A20"
+```
 
 ## Price trend
 
-`DISFundStdPriceSO` grid — all `selectMeta` rows where `tmpV12 == srtn_cd` → [`dis_std_price.py`](../src/dis_std_price.py).
+See previous section — `DISFundStdPriceSO` + `tmpV30` month-end snapshots in [`dis_std_price.py`](../src/dis_std_price.py).

@@ -6,12 +6,12 @@
 
 | 파일 | 설명 |
 |------|------|
-| **`data/reports/fund_portfolio_analysis_YYYYMMDD.json`** | **메인 분석 자료** — 요약 + 펀드별 `allocation`, `top10`, `top10_bs`, `price_trend` |
+| **`data/reports/fund_portfolio_analysis_YYYYMMDD.json`** | **메인 분석 자료** — `allocation`, `holdings`, `top10_bs`, `price_trend` |
 | `data/logs/run_*_fetch.json` | 실행 manifest (동일 fetch 결과) |
 | `data/timeseries/fund_allocation.csv` | 자산배분 시계열 |
 | `data/timeseries/fund_std_price.csv` | 기준가 **가격 추세** (일자별 upsert) |
 
-`top10` / `top10_bs` / `price_trend`는 JSON에 본문이 들어갑니다. CSV는 allocation·기준가 이력 위주입니다.
+`holdings`(공시 보유내역, 가변 길이) / `top10_bs` / `price_trend`는 JSON 본문입니다. `top10`은 `holdings`와 동일(호환용).
 
 ## 펀드 목록
 
@@ -24,7 +24,7 @@
 | [sync-and-fetch.yml](.github/workflows/sync-and-fetch.yml) | sync + **전체 펀드** fetch |
 | [test.yml](.github/workflows/test.yml) | pytest |
 
-`enabled_only: true` → enabled 펀드만. `use_gemini: true` → top10 SO 실패 시 Gemini(선택, `GEMINI_API_KEY`).
+`use_gemini` / `use_dart` / `use_funddoctor` — 보유내역 fallback (순서: KOFIA SO → Gemini → DART → funddoctor).
 
 ## 로컬
 
@@ -33,15 +33,18 @@ pip install -r requirements.txt
 python src/fund_list_sync.py
 python src/dis_parser.py --fetch --all-funds
 python src/dis_parser.py --fetch --alias TDF2050_Ce
-python src/dis_parser.py --fetch --all-funds --gemini
+python src/dis_parser.py --fetch --all-funds --gemini --dart
+python src/dis_parser.py --fetch --alias TDF2050_Ce --funddoctor
 python -m pytest tests/ -q
 ```
 
-## top10 · 가격 추세
+환경 변수(선택): `GEMINI_API_KEY`, `OPENDART_API_KEY`.
 
-- **top10_bs** — 결산 BS 계정 상위 10 + 비중 (항상)
-- **top10** — ProFrame SO 우선 → (선택) 공시 PDF/HTML + Gemini
-- **price_trend** — `DISFundStdPriceSO` 그리드에서 해당 펀드 전 일자 기준가
+## 보유내역 · 가격 추세
+
+- **holdings** — 공시 표 전체(10개 고정 아님). fallback: SO → KOFIA+Gemini → DART → funddoctor
+- **top10_bs** — 결산 BS 계정 상위(프록시, 항상)
+- **price_trend** — `DISFundStdPriceSO` 월말 `tmpV30` 다회 조회
 
 HTTP only. Playwright 없음.
 

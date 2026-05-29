@@ -7,7 +7,22 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
-from dis_std_price import price_history_from_grid, std_price_csv_rows
+from dis_std_price import (
+    month_end_dates_back,
+    months_for_max_days,
+    price_history_from_grid,
+    std_price_csv_rows,
+)
+
+
+def test_month_end_dates_back():
+    dates = month_end_dates_back("20250719", 3)
+    assert dates == ["20250731", "20250630", "20250531"]
+
+
+def test_months_for_max_days():
+    assert months_for_max_days(365) == 13
+    assert months_for_max_days(60) == 2
 
 
 def test_price_history_from_grid():

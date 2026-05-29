@@ -1,4 +1,4 @@
-"""Holdings top10 via ProFrame SO and optional HTTP report + Gemini."""
+"""Disclosed fund holdings: ProFrame SO + fallback chain (Gemini → DART → funddoctor)."""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ from xml.etree import ElementTree as ET
 import requests
 
 from dis_client import DisProframeClient
+from holdings_parse import rows_to_holdings
 
 try:
     import pdfplumber
@@ -37,39 +38,6 @@ def _parse_list_nodes(root: ET.Element) -> list[dict[str, str]]:
     return rows
 
 
-def _rows_to_top10(rows: list[dict[str, str]], *, source: str) -> list[dict[str, Any]]:
-    name_keys = ("scrNm", "koreanScrNm", "itemNm", "fundNm", "bondNm", "name", "holdNm")
-    weight_keys = ("weight", "weightPct", "holdRate", "rate", "ratio", "wt", "val2", "val1")
-    code_keys = ("scrCd", "standardCd", "isin", "itemCd")
-
-    candidates: list[tuple[float, dict[str, Any]]] = []
-    for row in rows:
-        name = next((row[k] for k in name_keys if row.get(k)), "")
-        if not name or len(name) < 2:
-            continue
-        w_raw = next((row[k] for k in weight_keys if row.get(k)), "")
-        try:
-            w = float(str(w_raw).replace("%", "").replace(",", ""))
-        except ValueError:
-            w = 0.0
-        code = next((row[k] for k in code_keys if row.get(k)), "")
-        candidates.append((w, {"name": name, "weight_pct": w_raw or str(w), "code": code}))
-
-    candidates.sort(key=lambda x: -x[0])
-    out: list[dict[str, Any]] = []
-    for rank, (_, item) in enumerate(candidates[:10], start=1):
-        out.append(
-            {
-                "rank": str(rank),
-                "name": item["name"],
-                "weight_pct": item["weight_pct"],
-                "code": item.get("code", ""),
-                "source": source,
-            }
-        )
-    return out
-
-
 def _period_fields(period: dict[str, str], bs: dict[str, str]) -> dict[str, str]:
     return {
         "standardDt": period.get("standardDt") or bs.get("standardDt") or "",
@@ -80,7 +48,7 @@ def _period_fields(period: dict[str, str], bs: dict[str, str]) -> dict[str, str]
     }
 
 
-def fetch_top10_so(
+def fetch_holdings_so(
     client: DisProframeClient,
     *,
     period: dict[str, str],
@@ -102,13 +70,20 @@ def fetch_top10_so(
             code = root.find(".//{*}pfmResponseCode")
             if code is not None and code.text and code.text not in ("", "0"):
                 continue
-            top10 = _rows_to_top10(_parse_list_nodes(root), source=f"dis_proframe:{svc}")
-            if top10:
-                return top10, "so"
+            holdings = rows_to_holdings(
+                _parse_list_nodes(root),
+                source=f"dis_proframe:{svc}",
+            )
+            if holdings:
+                return holdings, "so"
         except Exception:
             continue
         time.sleep(0.5)
     return [], "unavailable"
+
+
+# Back-compat aliases
+fetch_top10_so = fetch_holdings_so
 
 
 def _download_report_text(url: str, timeout: int = 45) -> str:
@@ -131,16 +106,24 @@ def _download_report_text(url: str, timeout: int = 45) -> str:
     return resp.text[:80000]
 
 
-def fetch_top10_gemini(
+def fetch_holdings_gemini(
     *,
     report_text: str,
     srtn_cd: str,
     bas_dt: str,
 ) -> tuple[list[dict[str, Any]], str]:
-    from gemini_extract import extract_top10_from_report_text
+    from gemini_extract import extract_holdings_from_report_text
 
-    rows = extract_top10_from_report_text(report_text, srtn_cd=srtn_cd, bas_dt=bas_dt)
+    rows = extract_holdings_from_report_text(
+        report_text,
+        srtn_cd=srtn_cd,
+        bas_dt=bas_dt,
+        source="kofia:gemini",
+    )
     return (rows, "gemini") if rows else ([], "unavailable")
+
+
+fetch_top10_gemini = fetch_holdings_gemini
 
 
 def resolve_report_text_from_ann(
@@ -176,3 +159,83 @@ def resolve_report_text_from_ann(
         return _download_report_text(url)
     except Exception:
         return ""
+
+
+def resolve_holdings(
+    client: DisProframeClient,
+    *,
+    period: dict[str, str],
+    bs: dict[str, str],
+    srtn_cd: str,
+    fnd_nm: str,
+    fund: dict[str, Any],
+    use_gemini: bool = False,
+    use_dart: bool = False,
+    use_funddoctor: bool = False,
+) -> tuple[list[dict[str, Any]], str, str]:
+    """
+    Fallback: KOFIA SO → KOFIA report+Gemini → DART → funddoctor.
+    Returns (holdings, status, source_label).
+    """
+    holdings, status = fetch_holdings_so(
+        client,
+        period=period,
+        bs=bs,
+        srtn_cd=srtn_cd,
+    )
+    if holdings:
+        src = holdings[0].get("source", "dis_proframe")
+        return holdings, status, src
+
+    bas_dt = period.get("standardDt", "")
+
+    if use_gemini:
+        report_text = resolve_report_text_from_ann(
+            client,
+            srtn_cd=srtn_cd,
+            standard_dt=bas_dt,
+        )
+        if report_text:
+            holdings, status = fetch_holdings_gemini(
+                report_text=report_text,
+                srtn_cd=srtn_cd,
+                bas_dt=bas_dt,
+            )
+            if holdings:
+                return holdings, status, "kofia:gemini"
+
+    if use_dart:
+        from dart_holdings import fetch_holdings_dart
+
+        holdings, status = fetch_holdings_dart(
+            fnd_nm=fnd_nm,
+            srtn_cd=srtn_cd,
+            bas_dt=bas_dt,
+            corp_code=str(fund.get("dart_corp_code") or ""),
+            use_gemini=use_gemini,
+        )
+        if holdings:
+            src = holdings[0].get("source", "dart")
+            return holdings, status, src
+
+    if use_funddoctor:
+        from funddoctor_holdings import fetch_holdings_funddoctor
+
+        fd = fund.get("funddoctor") or {}
+        if isinstance(fd, dict):
+            memb_cd = str(fd.get("memb_cd") or "")
+            pfund_cd = str(fd.get("pfund_cd") or "")
+        else:
+            memb_cd = pfund_cd = ""
+        holdings, status = fetch_holdings_funddoctor(
+            memb_cd=memb_cd,
+            pfund_cd=pfund_cd,
+            use_gemini=use_gemini,
+            srtn_cd=srtn_cd,
+            bas_dt=bas_dt,
+        )
+        if holdings:
+            src = holdings[0].get("source", "funddoctor")
+            return holdings, status, src
+
+    return [], "unavailable", ""

@@ -28,7 +28,15 @@ on:
         type: boolean
         default: false
       use_gemini:
-        description: "Use Gemini for top10 when ProFrame SO returns no rows"
+        description: "Gemini holdings parse when KOFIA SO has no rows"
+        type: boolean
+        default: false
+      use_dart:
+        description: "DART document fallback (needs OPENDART_API_KEY secret)"
+        type: boolean
+        default: true
+      use_funddoctor:
+        description: "funddoctor fallback when fund_list has funddoctor mapping"
         type: boolean
         default: false
   push:
@@ -73,6 +81,7 @@ jobs:
         if: github.event_name == 'push' || github.event.inputs.sync_only != 'true'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OPENDART_API_KEY: ${{ secrets.OPENDART_API_KEY }}
         run: |
           ARGS="src/dis_parser.py --fetch"
           ALIAS=""
@@ -91,6 +100,12 @@ jobs:
           fi
           if [ "${{ github.event.inputs.use_gemini }}" = "true" ]; then
             ARGS="$ARGS --gemini"
+          fi
+          if [ "${{ github.event_name }}" = "push" ] || [ "${{ github.event.inputs.use_dart }}" = "true" ]; then
+            ARGS="$ARGS --dart"
+          fi
+          if [ "${{ github.event.inputs.use_funddoctor }}" = "true" ]; then
+            ARGS="$ARGS --funddoctor"
           fi
           python $ARGS
 
