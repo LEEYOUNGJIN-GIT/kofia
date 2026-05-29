@@ -1,0 +1,2608 @@
+{
+  "meta": {
+    "source": "config/fund_list.yaml",
+    "fund_count": 34,
+    "fetched_at": "2026-05-29T09:13:33.618447+00:00",
+    "parser_version": "0.9.0",
+    "mode": "fetch"
+  },
+  "summary": {
+    "ok": 33,
+    "failed": 1,
+    "errors": {
+      "no_report_period": 1
+    },
+    "warnings": []
+  },
+  "funds": [
+    {
+      "status": "ok",
+      "alias": "F01_한국투자미국배당귀족증권자H_주식_C_e",
+      "srtn_cd": "K55101D20833",
+      "fnd_nm": "한국투자미국배당귀족증권자H(주식)C-e",
+      "registry": {
+        "srtn_cd": "K55101D20833",
+        "alias": "F01_한국투자미국배당귀족증권자H_주식_C_e",
+        "fnd_nm": "한국투자미국배당귀족증권자H(주식)C-e",
+        "korean_fund_nm": "한국투자미국배당귀족증권자투자신탁UH(주식)(C-e)",
+        "company_cd": "",
+        "fnd_tp": "주식"
+      },
+      "quarter": null,
+      "report_standard_dt": "20260415",
+      "bas_dt": "2026-04-15",
+      "price_trend": [
+        {
+          "bas_dt": "2026-04-30",
+          "std_price": "2017.12",
+          "chg_pct": "-0.2813"
+        },
+        {
+          "bas_dt": "2026-03-31",
+          "std_price": "2022.81",
+          "chg_pct": "5.1564"
+        },
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "1923.62",
+          "chg_pct": "5.2573"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "1827.54",
+          "chg_pct": "0.4121"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "1820.04",
+          "chg_pct": "0.8947"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1803.9",
+          "chg_pct": "5.3016"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1713.08",
+          "chg_pct": "-2.4336"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1755.81",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2026-04-30",
+        "std_price": "2017.12",
+        "query_dt": "",
+        "chg_pct": "-0.2813"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "2051.06",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F02_한국밸류글로벌배당인컴증권자_주식_C_E",
+      "srtn_cd": "K55236CW9650",
+      "fnd_nm": "한국밸류글로벌배당인컴증권자(주식)C-E",
+      "registry": {
+        "srtn_cd": "K55236CW9650",
+        "alias": "F02_한국밸류글로벌배당인컴증권자_주식_C_E",
+        "fnd_nm": "한국밸류글로벌배당인컴증권자(주식)C-E",
+        "korean_fund_nm": "한국밸류 글로벌배당인컴증권자투자신탁(주식)(C-E)",
+        "company_cd": "",
+        "fnd_tp": "주식"
+      },
+      "quarter": null,
+      "report_standard_dt": "20251201",
+      "bas_dt": "2025-12-01",
+      "price_trend": [
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "2129.89",
+          "chg_pct": "0.2032"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "2125.57",
+          "chg_pct": "2.2809"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "2078.17",
+          "chg_pct": "4.7238"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1984.43",
+          "chg_pct": "4.4459"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1899.96",
+          "chg_pct": "-1.349"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1925.94",
+          "chg_pct": "-2.6575"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1978.52",
+          "chg_pct": "0.6537"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1965.67",
+          "chg_pct": "8.6984"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "1808.37",
+          "chg_pct": "-1.2467"
+        },
+        {
+          "bas_dt": "2024-12-31",
+          "std_price": "1831.2",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-12-31",
+        "std_price": "2129.89",
+        "query_dt": "",
+        "chg_pct": "0.2032"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "2344.09",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F03_미래에셋글로벌헬스케어증권자1_주식_C_e",
+      "srtn_cd": "KR5301AY9744",
+      "fnd_nm": "미래에셋글로벌헬스케어증권자1(주식)C-e",
+      "registry": {
+        "srtn_cd": "KR5301AY9744",
+        "alias": "F03_미래에셋글로벌헬스케어증권자1_주식_C_e",
+        "fnd_nm": "미래에셋글로벌헬스케어증권자1(주식)C-e",
+        "korean_fund_nm": "미래에셋글로벌헬스케어증권자투자신탁1호(주식)종류C-e",
+        "company_cd": "",
+        "fnd_tp": "주식"
+      },
+      "quarter": null,
+      "report_standard_dt": "20260209",
+      "bas_dt": "2026-02-09",
+      "price_trend": [
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "1519.89",
+          "chg_pct": "6.2875"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "1429.98",
+          "chg_pct": "6.7205"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "1339.93",
+          "chg_pct": "-1.2907"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1357.45",
+          "chg_pct": "-2.0168"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1385.39",
+          "chg_pct": "-0.3876"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1390.78",
+          "chg_pct": "-3.1403"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1435.87",
+          "chg_pct": "-7.0466"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1544.72",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-12-31",
+        "std_price": "1519.89",
+        "query_dt": "",
+        "chg_pct": "6.2875"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1378.31",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F04_NH_Amundi_러_브증권자_주식_Ce",
+      "srtn_cd": "KR5232784987",
+      "fnd_nm": "NH-Amundi 러-브증권자[주식]Ce",
+      "registry": {
+        "srtn_cd": "KR5232784987",
+        "alias": "F04_NH_Amundi_러_브증권자_주식_Ce",
+        "fnd_nm": "NH-Amundi 러-브증권자[주식]Ce",
+        "korean_fund_nm": "NH-Amundi 러-브증권자투자신탁[주식]ClassCe",
+        "company_cd": "",
+        "fnd_tp": "주식"
+      },
+      "quarter": null,
+      "report_standard_dt": "20260210",
+      "bas_dt": "2026-02-10",
+      "price_trend": [
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "1003.92",
+          "chg_pct": "2.1303"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "982.98",
+          "chg_pct": "2.8093"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "956.12",
+          "chg_pct": "8.6982"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "879.61",
+          "chg_pct": "-1.7404"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "895.19",
+          "chg_pct": "-2.1511"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "914.87",
+          "chg_pct": "-0.3073"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "917.69",
+          "chg_pct": "4.3434"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "879.49",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-12-31",
+        "std_price": "1003.92",
+        "query_dt": "",
+        "chg_pct": "2.1303"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1215.97",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F05_신한코리아롱숏증권자_주식_A_e",
+      "srtn_cd": "KR5210AO4234",
+      "fnd_nm": "신한코리아롱숏증권자[주식]A-e",
+      "registry": {
+        "srtn_cd": "KR5210AO4234",
+        "alias": "F05_신한코리아롱숏증권자_주식_A_e",
+        "fnd_nm": "신한코리아롱숏증권자[주식]A-e",
+        "korean_fund_nm": "신한코리아롱숏증권자투자신탁[주식](종류A-e)",
+        "company_cd": "",
+        "fnd_tp": "주식"
+      },
+      "quarter": null,
+      "report_standard_dt": "20260204",
+      "bas_dt": "2026-02-04",
+      "price_trend": [
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "1473.73",
+          "chg_pct": "5.4125"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "1398.06",
+          "chg_pct": "2.1429"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "1368.73",
+          "chg_pct": "0.2975"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1364.67",
+          "chg_pct": "-1.1782"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1380.94",
+          "chg_pct": "3.0475"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1340.1",
+          "chg_pct": "4.0248"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1288.25",
+          "chg_pct": "-4.3076"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1346.24",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-12-31",
+        "std_price": "1473.73",
+        "query_dt": "",
+        "chg_pct": "5.4125"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1955.07",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F06_유리글로벌거래소증권자1호_주식_C_e",
+      "srtn_cd": "KR5307AQ4905",
+      "fnd_nm": "유리글로벌거래소증권자1호[주식]C-e",
+      "registry": {
+        "srtn_cd": "KR5307AQ4905",
+        "alias": "F06_유리글로벌거래소증권자1호_주식_C_e",
+        "fnd_nm": "유리글로벌거래소증권자1호[주식]C-e",
+        "korean_fund_nm": "유리글로벌거래소증권자투자신탁제1호[주식]_C/C-e",
+        "company_cd": "",
+        "fnd_tp": "주식"
+      },
+      "quarter": null,
+      "report_standard_dt": "20260311",
+      "bas_dt": "2026-03-11",
+      "price_trend": [
+        {
+          "bas_dt": "2026-03-31",
+          "std_price": "2412.67",
+          "chg_pct": "0.7231"
+        },
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "2395.35",
+          "chg_pct": "3.0285"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "2324.94",
+          "chg_pct": "-1.0234"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "2348.98",
+          "chg_pct": "-5.084"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "2474.8",
+          "chg_pct": "0.6745"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "2458.22",
+          "chg_pct": "4.8635"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "2344.21",
+          "chg_pct": "-0.327"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "2351.9",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2026-03-31",
+        "std_price": "2412.67",
+        "query_dt": "",
+        "chg_pct": "0.7231"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "2513.08",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F07_우리미국단기채공모주증권자1호_H_A_e",
+      "srtn_cd": "K55107ED6034",
+      "fnd_nm": "우리미국단기채공모주증권자1호(H)A-e",
+      "registry": {
+        "srtn_cd": "K55107ED6034",
+        "alias": "F07_우리미국단기채공모주증권자1호_H_A_e",
+        "fnd_nm": "우리미국단기채공모주증권자1호(H)A-e",
+        "korean_fund_nm": "우리미국단기채공모주증권자투자신탁1호(USD)(채권혼합)ClassA-e",
+        "company_cd": "",
+        "fnd_tp": "주식"
+      },
+      "quarter": null,
+      "report_standard_dt": "20250819",
+      "bas_dt": "2025-08-19",
+      "price_trend": [
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "14744.41",
+          "chg_pct": "2.5423"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "14378.86",
+          "chg_pct": "-3.2429"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "14860.78",
+          "chg_pct": "-1.4397"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "15077.86",
+          "chg_pct": "1.8478"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "14804.31",
+          "chg_pct": "0.8474"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "14679.91",
+          "chg_pct": "-1.9252"
+        },
+        {
+          "bas_dt": "2024-12-31",
+          "std_price": "14968.07",
+          "chg_pct": "7.1231"
+        },
+        {
+          "bas_dt": "2024-10-31",
+          "std_price": "13972.77",
+          "chg_pct": "5.0561"
+        },
+        {
+          "bas_dt": "2024-09-30",
+          "std_price": "13300.3",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-07-31",
+        "std_price": "14744.41",
+        "query_dt": "",
+        "chg_pct": "2.5423"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "16717.47",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F08_신한삼성전자알파증권자1호_채권혼합_C_e",
+      "srtn_cd": "K55210CY0962",
+      "fnd_nm": "신한삼성전자알파증권자1호[채권혼합]C-e",
+      "registry": {
+        "srtn_cd": "K55210CY0962",
+        "alias": "F08_신한삼성전자알파증권자1호_채권혼합_C_e",
+        "fnd_nm": "신한삼성전자알파증권자1호[채권혼합]C-e",
+        "korean_fund_nm": "신한삼성전자알파증권자투자신탁제1호[채권혼합](종류C-e)",
+        "company_cd": "",
+        "fnd_tp": "혼합"
+      },
+      "quarter": null,
+      "report_standard_dt": "20260116",
+      "bas_dt": "2026-01-16",
+      "price_trend": [
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "1248.64",
+          "chg_pct": "3.0758"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "1211.38",
+          "chg_pct": "5.3658"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "1149.69",
+          "chg_pct": "2.9625"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1116.61",
+          "chg_pct": "3.8234"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1075.49",
+          "chg_pct": "1.8495"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1055.96",
+          "chg_pct": "-0.7398"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1063.83",
+          "chg_pct": "1.4902"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1048.21",
+          "chg_pct": "1.0537"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "1037.28",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-12-31",
+        "std_price": "1248.64",
+        "query_dt": "",
+        "chg_pct": "3.0758"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1591.68",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F09_한국투자크레딧포커스ESG증권자1_채권_C_e",
+      "srtn_cd": "KR5101888398",
+      "fnd_nm": "한국투자크레딧포커스ESG증권자1(채권)C-e",
+      "registry": {
+        "srtn_cd": "KR5101888398",
+        "alias": "F09_한국투자크레딧포커스ESG증권자1_채권_C_e",
+        "fnd_nm": "한국투자크레딧포커스ESG증권자1(채권)C-e",
+        "korean_fund_nm": "한국투자크레딧포커스ESG증권자투자신탁1호(채권)(C-e)",
+        "company_cd": "",
+        "fnd_tp": "채권"
+      },
+      "quarter": null,
+      "report_standard_dt": "20251102",
+      "bas_dt": "2025-11-02",
+      "price_trend": [
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "1073.85",
+          "chg_pct": "-0.0102"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "1073.96",
+          "chg_pct": "0.3795"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1069.9",
+          "chg_pct": "0.3668"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1065.99",
+          "chg_pct": "0.5281"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1060.39",
+          "chg_pct": "0.8253"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1051.71",
+          "chg_pct": "0.2564"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1049.02",
+          "chg_pct": "0.3501"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "1045.36",
+          "chg_pct": "0.7061"
+        },
+        {
+          "bas_dt": "2024-12-31",
+          "std_price": "1038.03",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-10-31",
+        "std_price": "1073.85",
+        "query_dt": "",
+        "chg_pct": "-0.0102"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1032.63",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F10_한화단기하이일드증권자_채권_C_E",
+      "srtn_cd": "KR5237A90400",
+      "fnd_nm": "한화단기하이일드증권자(채권)C-E",
+      "registry": {
+        "srtn_cd": "KR5237A90400",
+        "alias": "F10_한화단기하이일드증권자_채권_C_E",
+        "fnd_nm": "한화단기하이일드증권자(채권)C-E",
+        "korean_fund_nm": "한화단기하이일드증권 자투자신탁(채권) C - E 클래스",
+        "company_cd": "",
+        "fnd_tp": "채권"
+      },
+      "quarter": null,
+      "report_standard_dt": "20260311",
+      "bas_dt": "2026-03-11",
+      "price_trend": [
+        {
+          "bas_dt": "2026-03-31",
+          "std_price": "1070.15",
+          "chg_pct": "-4.0147"
+        },
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "1114.91",
+          "chg_pct": "0.5039"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "1109.32",
+          "chg_pct": "0.2694"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "1106.34",
+          "chg_pct": "0.9416"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1096.02",
+          "chg_pct": "0.3461"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1092.24",
+          "chg_pct": "1.2937"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1078.29",
+          "chg_pct": "0.0956"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1077.26",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2026-03-31",
+        "std_price": "1070.15",
+        "query_dt": "",
+        "chg_pct": "-4.0147"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1087.02",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F11_미래에셋인도채권증권자1호_채권_C_e",
+      "srtn_cd": "K55301AZ7463",
+      "fnd_nm": "미래에셋인도채권증권자1호(채권)C-e",
+      "registry": {
+        "srtn_cd": "K55301AZ7463",
+        "alias": "F11_미래에셋인도채권증권자1호_채권_C_e",
+        "fnd_nm": "미래에셋인도채권증권자1호(채권)C-e",
+        "korean_fund_nm": "미래에셋인도채권증권자투자신탁1호(채권)종류C-e",
+        "company_cd": "",
+        "fnd_tp": "채권"
+      },
+      "quarter": null,
+      "report_standard_dt": "20260426",
+      "bas_dt": "2026-04-26",
+      "price_trend": [
+        {
+          "bas_dt": "2026-04-30",
+          "std_price": "1010.21",
+          "chg_pct": "-6.1823"
+        },
+        {
+          "bas_dt": "2026-03-31",
+          "std_price": "1076.78",
+          "chg_pct": "-0.3959"
+        },
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "1081.06",
+          "chg_pct": "-0.1459"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "1082.64",
+          "chg_pct": "2.6968"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "1054.21",
+          "chg_pct": "-0.1771"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1056.08",
+          "chg_pct": "0.0199"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1055.87",
+          "chg_pct": "-4.7375"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1108.38",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2026-04-30",
+        "std_price": "1010.21",
+        "query_dt": "",
+        "chg_pct": "-6.1823"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1014.44",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F12_미래에셋글로벌다이나믹증권1호_채권_C_e",
+      "srtn_cd": "K55301BW1732",
+      "fnd_nm": "미래에셋글로벌다이나믹증권1호(채권)C-e",
+      "registry": {
+        "srtn_cd": "K55301BW1732",
+        "alias": "F12_미래에셋글로벌다이나믹증권1호_채권_C_e",
+        "fnd_nm": "미래에셋글로벌다이나믹증권1호(채권)C-e",
+        "korean_fund_nm": "미래에셋글로벌다이나믹증권자투자신탁1호(채권) 종류C-e",
+        "company_cd": "",
+        "fnd_tp": "채권"
+      },
+      "quarter": null,
+      "report_standard_dt": "20251231",
+      "bas_dt": "2025-12-31",
+      "price_trend": [
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "1017.89",
+          "chg_pct": "0.2393"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "1015.46",
+          "chg_pct": "0.7521"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "1007.88",
+          "chg_pct": "1.4025"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "993.94",
+          "chg_pct": "0.4771"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "989.22",
+          "chg_pct": "0.5274"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "984.03",
+          "chg_pct": "0.361"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "980.49",
+          "chg_pct": "-0.2827"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "983.27",
+          "chg_pct": "1.2074"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "971.54",
+          "chg_pct": "0.0907"
+        },
+        {
+          "bas_dt": "2024-12-31",
+          "std_price": "970.66",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-12-31",
+        "std_price": "1017.89",
+        "query_dt": "",
+        "chg_pct": "0.2393"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1000.9",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F13_미래에셋미국달러우량회사채1_H_채권Ce",
+      "srtn_cd": "K55301BC4904",
+      "fnd_nm": "미래에셋미국달러우량회사채1(H)채권Ce",
+      "registry": {
+        "srtn_cd": "K55301BC4904",
+        "alias": "F13_미래에셋미국달러우량회사채1_H_채권Ce",
+        "fnd_nm": "미래에셋미국달러우량회사채1(H)채권Ce",
+        "korean_fund_nm": "미래에셋미국달러우량회사채증권자투자신탁1호(H)(채권)종류C-e",
+        "company_cd": "",
+        "fnd_tp": "채권"
+      },
+      "quarter": null,
+      "report_standard_dt": "20260428",
+      "bas_dt": "2026-04-28",
+      "price_trend": [
+        {
+          "bas_dt": "2026-04-30",
+          "std_price": "971.23",
+          "chg_pct": "1.1255"
+        },
+        {
+          "bas_dt": "2026-03-31",
+          "std_price": "960.42",
+          "chg_pct": "-1.9239"
+        },
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "979.26",
+          "chg_pct": "-0.3936"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "983.13",
+          "chg_pct": "0.6965"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "976.33",
+          "chg_pct": "1.628"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "960.69",
+          "chg_pct": "0.2892"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "957.92",
+          "chg_pct": "0.5426"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "952.75",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2026-04-30",
+        "std_price": "971.23",
+        "query_dt": "",
+        "chg_pct": "1.1255"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "968.2",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F14_NH_국채10년인덱스자_채권Ce",
+      "srtn_cd": "KR5232AT9794",
+      "fnd_nm": "NH 국채10년인덱스자-채권Ce",
+      "registry": {
+        "srtn_cd": "KR5232AT9794",
+        "alias": "F14_NH_국채10년인덱스자_채권Ce",
+        "fnd_nm": "NH 국채10년인덱스자-채권Ce",
+        "korean_fund_nm": "NH-Amundi 국채10년 인덱스 증권자[채권]Class Ce",
+        "company_cd": "",
+        "fnd_tp": "채권"
+      },
+      "quarter": null,
+      "report_standard_dt": "20250831",
+      "bas_dt": "2025-08-31",
+      "price_trend": [
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1056.49",
+          "chg_pct": "0.0729"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1055.72",
+          "chg_pct": "-1.1609"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1068.12",
+          "chg_pct": "2.0221"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1046.95",
+          "chg_pct": "-0.4923"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1052.13",
+          "chg_pct": "1.1187"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "1040.49",
+          "chg_pct": "1.1284"
+        },
+        {
+          "bas_dt": "2024-12-31",
+          "std_price": "1028.88",
+          "chg_pct": "0.9874"
+        },
+        {
+          "bas_dt": "2024-10-31",
+          "std_price": "1018.82",
+          "chg_pct": "-0.5505"
+        },
+        {
+          "bas_dt": "2024-09-30",
+          "std_price": "1024.46",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-07-31",
+        "std_price": "1056.49",
+        "query_dt": "",
+        "chg_pct": "0.0729"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "959.16",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F15_삼성ABF코리아장기채권인덱스증권_채권_Re",
+      "srtn_cd": "K55105CJ7634",
+      "fnd_nm": "삼성ABF코리아장기채권인덱스증권[채권]Re",
+      "registry": {
+        "srtn_cd": "K55105CJ7634",
+        "alias": "F15_삼성ABF코리아장기채권인덱스증권_채권_Re",
+        "fnd_nm": "삼성ABF코리아장기채권인덱스증권[채권]Re",
+        "korean_fund_nm": "삼성ABF코리아장기채권인덱스증권투자신탁[채권]Re",
+        "company_cd": "",
+        "fnd_tp": "채권"
+      },
+      "quarter": null,
+      "report_standard_dt": "20260425",
+      "bas_dt": "2026-04-25",
+      "price_trend": [
+        {
+          "bas_dt": "2026-04-30",
+          "std_price": "917.55",
+          "chg_pct": "1.1487"
+        },
+        {
+          "bas_dt": "2026-03-31",
+          "std_price": "907.13",
+          "chg_pct": "-3.9759"
+        },
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "944.69",
+          "chg_pct": "-2.4524"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "968.44",
+          "chg_pct": "-1.0847"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "979.06",
+          "chg_pct": "-0.6867"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "985.83",
+          "chg_pct": "0.2298"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "983.57",
+          "chg_pct": "-1.4943"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "998.49",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2026-04-30",
+        "std_price": "917.55",
+        "query_dt": "",
+        "chg_pct": "1.1487"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "890.12",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F16_유진챔피언중단기채증권자투자_채권_Ce",
+      "srtn_cd": "K55214CD4742",
+      "fnd_nm": "유진챔피언중단기채증권자투자(채권)Ce",
+      "registry": {
+        "srtn_cd": "K55214CD4742",
+        "alias": "F16_유진챔피언중단기채증권자투자_채권_Ce",
+        "fnd_nm": "유진챔피언중단기채증권자투자(채권)Ce",
+        "korean_fund_nm": "유진챔피언중단기채증권자투자신탁(채권) Class C-E",
+        "company_cd": "",
+        "fnd_tp": "채권"
+      },
+      "quarter": null,
+      "report_standard_dt": "20250821",
+      "bas_dt": "2025-08-21",
+      "price_trend": [
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1106.49",
+          "chg_pct": "0.3182"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1102.98",
+          "chg_pct": "0.4947"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1097.55",
+          "chg_pct": "0.5865"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1091.15",
+          "chg_pct": "0.2158"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1088.8",
+          "chg_pct": "0.3576"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "1084.92",
+          "chg_pct": "0.5272"
+        },
+        {
+          "bas_dt": "2024-12-31",
+          "std_price": "1079.23",
+          "chg_pct": "0.792"
+        },
+        {
+          "bas_dt": "2024-10-31",
+          "std_price": "1070.75",
+          "chg_pct": "0.235"
+        },
+        {
+          "bas_dt": "2024-09-30",
+          "std_price": "1068.24",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-07-31",
+        "std_price": "1106.49",
+        "query_dt": "",
+        "chg_pct": "0.3182"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1070.55",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F17_미래에셋브라질하이인컴채권자_채권_Ce",
+      "srtn_cd": "KR5205795119",
+      "fnd_nm": "미래에셋브라질하이인컴채권자[채권]Ce",
+      "registry": {
+        "srtn_cd": "KR5205795119",
+        "alias": "F17_미래에셋브라질하이인컴채권자_채권_Ce",
+        "fnd_nm": "미래에셋브라질하이인컴채권자[채권]Ce",
+        "korean_fund_nm": "미래에셋브라질하이인컴채권증권자투자신탁[채권]종류Ce",
+        "company_cd": "",
+        "fnd_tp": "채권"
+      },
+      "quarter": null,
+      "report_standard_dt": "20250911",
+      "bas_dt": "2025-09-11",
+      "price_trend": [
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "925.04",
+          "chg_pct": "7.0772"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "863.9",
+          "chg_pct": "0.5763"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "858.95",
+          "chg_pct": "0.1843"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "857.37",
+          "chg_pct": "2.8145"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "833.9",
+          "chg_pct": "2.5543"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "813.13",
+          "chg_pct": "4.2969"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "779.63",
+          "chg_pct": "2.2144"
+        },
+        {
+          "bas_dt": "2024-12-31",
+          "std_price": "762.74",
+          "chg_pct": "-4.0144"
+        },
+        {
+          "bas_dt": "2024-10-31",
+          "std_price": "794.64",
+          "chg_pct": "-1.5914"
+        },
+        {
+          "bas_dt": "2024-09-30",
+          "std_price": "807.49",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-09-30",
+        "std_price": "925.04",
+        "query_dt": "",
+        "chg_pct": "7.0772"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1088.01",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "TDF2050_Ce",
+      "srtn_cd": "K55301D51271",
+      "fnd_nm": "미래에셋전략배분적격TDF2050혼합자C-e",
+      "registry": {
+        "srtn_cd": "K55301D51271",
+        "alias": "TDF2050_Ce",
+        "fnd_nm": "미래에셋전략배분적격TDF2050혼합자C-e",
+        "korean_fund_nm": "미래에셋전략배분적격TDF2050혼합자산자투자신탁종류C-e",
+        "company_cd": "",
+        "fnd_tp": "혼합(TDF)"
+      },
+      "quarter": null,
+      "report_standard_dt": "20250719",
+      "bas_dt": "2025-07-19",
+      "price_trend": [
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1429.02",
+          "chg_pct": "2.8745"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1389.09",
+          "chg_pct": "6.1541"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1308.56",
+          "chg_pct": "-2.5644"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1343",
+          "chg_pct": "-2.7087"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1380.39",
+          "chg_pct": "-0.3386"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "1385.08",
+          "chg_pct": "1.236"
+        },
+        {
+          "bas_dt": "2024-12-31",
+          "std_price": "1368.17",
+          "chg_pct": "2.8854"
+        },
+        {
+          "bas_dt": "2024-10-31",
+          "std_price": "1329.8",
+          "chg_pct": "1.5022"
+        },
+        {
+          "bas_dt": "2024-09-30",
+          "std_price": "1310.12",
+          "chg_pct": "1.7419"
+        },
+        {
+          "bas_dt": "2024-07-31",
+          "std_price": "1287.69",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-07-31",
+        "std_price": "1429.02",
+        "query_dt": "",
+        "chg_pct": "2.8745"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1811.25",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F19_미래에셋로저스Commodity인덱스특별자C",
+      "srtn_cd": "K55301DG0765",
+      "fnd_nm": "미래에셋로저스Commodity인덱스특별자C-e",
+      "registry": {
+        "srtn_cd": "K55301DG0765",
+        "alias": "F19_미래에셋로저스Commodity인덱스특별자C",
+        "fnd_nm": "미래에셋로저스Commodity인덱스특별자C-e",
+        "korean_fund_nm": "미래에셋로저스Commodity인덱스특별자산자투자신탁(일반상품-파생형) 종류C-e",
+        "company_cd": "",
+        "fnd_tp": "기타/원자재"
+      },
+      "quarter": null,
+      "report_standard_dt": "20250815",
+      "bas_dt": "2025-08-15",
+      "price_trend": [
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1059.17",
+          "chg_pct": "2.1064"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1037.32",
+          "chg_pct": "1.5408"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1021.58",
+          "chg_pct": "-5.2865"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1078.6",
+          "chg_pct": "0.4152"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1074.14",
+          "chg_pct": "-1.1785"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "1086.95",
+          "chg_pct": "5.2125"
+        },
+        {
+          "bas_dt": "2024-12-31",
+          "std_price": "1033.1",
+          "chg_pct": "1.0812"
+        },
+        {
+          "bas_dt": "2024-10-31",
+          "std_price": "1022.05",
+          "chg_pct": "-0.8681"
+        },
+        {
+          "bas_dt": "2024-09-30",
+          "std_price": "1031",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-07-31",
+        "std_price": "1059.17",
+        "query_dt": "",
+        "chg_pct": "2.1064"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1465.44",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F20_카디안미국투자적격회사채자_H_C_E",
+      "srtn_cd": "KR5229AC5028",
+      "fnd_nm": "카디안미국투자적격회사채자[H]C-E",
+      "registry": {
+        "srtn_cd": "KR5229AC5028",
+        "alias": "F20_카디안미국투자적격회사채자_H_C_E",
+        "fnd_nm": "카디안미국투자적격회사채자[H]C-E",
+        "korean_fund_nm": "카디안 미국투자적격회사채증권자투자신탁(H)[채권-재간접형] 클래스 C-E",
+        "company_cd": "",
+        "fnd_tp": "채권"
+      },
+      "quarter": null,
+      "report_standard_dt": "20250916",
+      "bas_dt": "2025-09-16",
+      "price_trend": [
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "1168.94",
+          "chg_pct": "1.586"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1150.69",
+          "chg_pct": "0.3156"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1147.07",
+          "chg_pct": "0.5717"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1140.55",
+          "chg_pct": "-0.0123"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1140.69",
+          "chg_pct": "-0.4877"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1146.28",
+          "chg_pct": "2.0085"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "1123.71",
+          "chg_pct": "-0.4006"
+        },
+        {
+          "bas_dt": "2024-12-31",
+          "std_price": "1128.23",
+          "chg_pct": "-0.3348"
+        },
+        {
+          "bas_dt": "2024-10-31",
+          "std_price": "1132.02",
+          "chg_pct": "-2.0956"
+        },
+        {
+          "bas_dt": "2024-09-30",
+          "std_price": "1156.25",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-09-30",
+        "std_price": "1168.94",
+        "query_dt": "",
+        "chg_pct": "1.586"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1174.11",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F21_하나글로벌리츠부동산자_재간접형_C_E",
+      "srtn_cd": "K55102BF6907",
+      "fnd_nm": "하나글로벌리츠부동산자[재간접형]C-E",
+      "registry": {
+        "srtn_cd": "K55102BF6907",
+        "alias": "F21_하나글로벌리츠부동산자_재간접형_C_E",
+        "fnd_nm": "하나글로벌리츠부동산자[재간접형]C-E",
+        "korean_fund_nm": "하나글로벌리츠부동산자투자신탁[재간접형]ClassC-E",
+        "company_cd": "",
+        "fnd_tp": "재간접"
+      },
+      "quarter": null,
+      "report_standard_dt": "20250529",
+      "bas_dt": "2025-05-29",
+      "price_trend": [
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1008.48",
+          "chg_pct": "-0.8007"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1016.62",
+          "chg_pct": "-3.0489"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1048.59",
+          "chg_pct": "1.8029"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "1030.02",
+          "chg_pct": "0.2316"
+        },
+        {
+          "bas_dt": "2024-12-31",
+          "std_price": "1027.64",
+          "chg_pct": "-5.3921"
+        },
+        {
+          "bas_dt": "2024-10-31",
+          "std_price": "1086.21",
+          "chg_pct": "-1.5374"
+        },
+        {
+          "bas_dt": "2024-09-30",
+          "std_price": "1103.17",
+          "chg_pct": "5.6029"
+        },
+        {
+          "bas_dt": "2024-07-31",
+          "std_price": "1044.64",
+          "chg_pct": "7.7926"
+        },
+        {
+          "bas_dt": "2024-05-31",
+          "std_price": "969.12",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-04-30",
+        "std_price": "1008.48",
+        "query_dt": "",
+        "chg_pct": "-0.8007"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1181.01",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F22_피델리티아시아하이일드증권_채권재간접_Ce",
+      "srtn_cd": "KR5235971144",
+      "fnd_nm": "피델리티아시아하이일드증권(채권재간접)Ce",
+      "registry": {
+        "srtn_cd": "KR5235971144",
+        "alias": "F22_피델리티아시아하이일드증권_채권재간접_Ce",
+        "fnd_nm": "피델리티아시아하이일드증권(채권재간접)Ce",
+        "korean_fund_nm": "피델리티아시아하이일드증권자투자신탁C-e(채권-재간접형)",
+        "company_cd": "",
+        "fnd_tp": "재간접"
+      },
+      "quarter": null,
+      "report_standard_dt": "20260124",
+      "bas_dt": "2026-01-24",
+      "price_trend": [
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "793.97",
+          "chg_pct": "-0.5449"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "798.32",
+          "chg_pct": "0.7001"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "792.77",
+          "chg_pct": "2.7849"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "771.29",
+          "chg_pct": "1.4482"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "760.28",
+          "chg_pct": "1.2627"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "750.8",
+          "chg_pct": "-1.2521"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "760.32",
+          "chg_pct": "0.2135"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "758.7",
+          "chg_pct": "2.509"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "740.13",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-12-31",
+        "std_price": "793.97",
+        "query_dt": "",
+        "chg_pct": "-0.5449"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "807.15",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F23_피델리티글로벌배당인컴증권자주식재간접Ce",
+      "srtn_cd": "KR5235AF3899",
+      "fnd_nm": "피델리티글로벌배당인컴증권자주식재간접Ce",
+      "registry": {
+        "srtn_cd": "KR5235AF3899",
+        "alias": "F23_피델리티글로벌배당인컴증권자주식재간접Ce",
+        "fnd_nm": "피델리티글로벌배당인컴증권자주식재간접Ce",
+        "korean_fund_nm": "피델리티글로벌배당인컴증권자투자신탁(주식-재간접형)종류C-e",
+        "company_cd": "",
+        "fnd_tp": "재간접"
+      },
+      "quarter": null,
+      "report_standard_dt": "20260219",
+      "bas_dt": "2026-02-19",
+      "price_trend": [
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "2008.21",
+          "chg_pct": "2.1995"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "1964.99",
+          "chg_pct": "2.0594"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "1925.34",
+          "chg_pct": "-0.3478"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1932.06",
+          "chg_pct": "1.8417"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1897.12",
+          "chg_pct": "2.3865"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1852.9",
+          "chg_pct": "-0.8237"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1868.29",
+          "chg_pct": "-0.8602"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1884.5",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-12-31",
+        "std_price": "2008.21",
+        "query_dt": "",
+        "chg_pct": "2.1995"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "2161.09",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F24_한국투자미국장기국채증권자H_재간접형_C_e",
+      "srtn_cd": "K55101E95072",
+      "fnd_nm": "한국투자미국장기국채증권자H(재간접형)C-e",
+      "registry": {
+        "srtn_cd": "K55101E95072",
+        "alias": "F24_한국투자미국장기국채증권자H_재간접형_C_e",
+        "fnd_nm": "한국투자미국장기국채증권자H(재간접형)C-e",
+        "korean_fund_nm": "한국투자미국장기국채증권자투자신탁H(채권-재간접형)(C-e)",
+        "company_cd": "",
+        "fnd_tp": "재간접"
+      },
+      "quarter": null,
+      "report_standard_dt": "20260313",
+      "bas_dt": "2026-03-13",
+      "price_trend": [
+        {
+          "bas_dt": "2026-03-31",
+          "std_price": "940.14",
+          "chg_pct": "-2.3931"
+        },
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "963.19",
+          "chg_pct": "-2.3817"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "986.69",
+          "chg_pct": "2.2508"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "964.97",
+          "chg_pct": "2.0344"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "945.73",
+          "chg_pct": "-0.4138"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "949.66",
+          "chg_pct": "-2.0626"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "969.66",
+          "chg_pct": "0.5642"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "964.22",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2026-03-31",
+        "std_price": "940.14",
+        "query_dt": "",
+        "chg_pct": "-2.3931"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "937.33",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F25_다올JP모건글로벌투자적격등급회사채H_Ce",
+      "srtn_cd": "K55306DW8383",
+      "fnd_nm": "다올JP모건글로벌투자적격등급회사채H_Ce",
+      "registry": {
+        "srtn_cd": "K55306DW8383",
+        "alias": "F25_다올JP모건글로벌투자적격등급회사채H_Ce",
+        "fnd_nm": "다올JP모건글로벌투자적격등급회사채H_Ce",
+        "korean_fund_nm": "다올JP모건글로벌투자적격등급회사채증권자투자신탁(H)[채권-재간접형]종류Ce",
+        "company_cd": "",
+        "fnd_tp": "채권"
+      },
+      "quarter": null,
+      "report_standard_dt": "20251016",
+      "bas_dt": "2025-10-16",
+      "price_trend": [
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "1153.54",
+          "chg_pct": "1.4511"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "1137.04",
+          "chg_pct": "1.3658"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1121.72",
+          "chg_pct": "0.4945"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1116.2",
+          "chg_pct": "0.5106"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1110.53",
+          "chg_pct": "0.3769"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1106.36",
+          "chg_pct": "-0.7206"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1114.39",
+          "chg_pct": "1.8601"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "1094.04",
+          "chg_pct": "-0.464"
+        },
+        {
+          "bas_dt": "2024-12-31",
+          "std_price": "1099.14",
+          "chg_pct": "-0.2143"
+        },
+        {
+          "bas_dt": "2024-10-31",
+          "std_price": "1101.5",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-10-31",
+        "std_price": "1153.54",
+        "query_dt": "",
+        "chg_pct": "1.4511"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1142.62",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F26_한화글로벌매크로증권자_주혼재간접CE",
+      "srtn_cd": "K55237B91202",
+      "fnd_nm": "한화글로벌매크로증권자-주혼재간접CE",
+      "registry": {
+        "srtn_cd": "K55237B91202",
+        "alias": "F26_한화글로벌매크로증권자_주혼재간접CE",
+        "fnd_nm": "한화글로벌매크로증권자-주혼재간접CE",
+        "korean_fund_nm": "한화글로벌매크로증권 자투자신탁(주식혼합-재간접형) C - E 클래스",
+        "company_cd": "",
+        "fnd_tp": "재간접"
+      },
+      "quarter": null,
+      "report_standard_dt": "20251209",
+      "bas_dt": "2025-12-09",
+      "price_trend": [
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "1185.37",
+          "chg_pct": "-1.3655"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "1201.78",
+          "chg_pct": "3.4377"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "1161.84",
+          "chg_pct": "0.1051"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1160.62",
+          "chg_pct": "-0.0095"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1160.73",
+          "chg_pct": "-3.5338"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1203.25",
+          "chg_pct": "2.1816"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1177.56",
+          "chg_pct": "-1.2404"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1192.35",
+          "chg_pct": "-0.356"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "1196.61",
+          "chg_pct": "0.2639"
+        },
+        {
+          "bas_dt": "2024-12-31",
+          "std_price": "1193.46",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-12-31",
+        "std_price": "1185.37",
+        "query_dt": "",
+        "chg_pct": "-1.3655"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1154.31",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F27_미래에셋N2글로벌자산배분30증권1호C_e",
+      "srtn_cd": "K55301BB5985",
+      "fnd_nm": "미래에셋N2글로벌자산배분30증권1호C-e",
+      "registry": {
+        "srtn_cd": "K55301BB5985",
+        "alias": "F27_미래에셋N2글로벌자산배분30증권1호C_e",
+        "fnd_nm": "미래에셋N2글로벌자산배분30증권1호C-e",
+        "korean_fund_nm": "미래에셋N2글로벌자산배분30증권투자신탁1호(채권혼합-재간접형)종류C-e",
+        "company_cd": "",
+        "fnd_tp": "혼합"
+      },
+      "quarter": null,
+      "report_standard_dt": "20260313",
+      "bas_dt": "2026-03-13",
+      "price_trend": [
+        {
+          "bas_dt": "2026-03-31",
+          "std_price": "1338.29",
+          "chg_pct": "1.2161"
+        },
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "1322.21",
+          "chg_pct": "-0.3317"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "1326.61",
+          "chg_pct": "1.5968"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "1305.76",
+          "chg_pct": "2.3171"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1276.19",
+          "chg_pct": "1.4774"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1257.61",
+          "chg_pct": "0.6853"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1249.05",
+          "chg_pct": "-0.1008"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1250.31",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2026-03-31",
+        "std_price": "1338.29",
+        "query_dt": "",
+        "chg_pct": "1.2161"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1448.71",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F29_삼성OCIO솔루션안정형증권_혼합재간접_Ae",
+      "srtn_cd": "K55105DS4902",
+      "fnd_nm": "삼성OCIO솔루션안정형증권[혼합재간접]Ae",
+      "registry": {
+        "srtn_cd": "K55105DS4902",
+        "alias": "F29_삼성OCIO솔루션안정형증권_혼합재간접_Ae",
+        "fnd_nm": "삼성OCIO솔루션안정형증권[혼합재간접]Ae",
+        "korean_fund_nm": "삼성OCIO솔루션안정형증권투자신탁[혼합-재간접형]_Ae",
+        "company_cd": "",
+        "fnd_tp": "재간접"
+      },
+      "quarter": null,
+      "report_standard_dt": "20260414",
+      "bas_dt": "2026-04-14",
+      "price_trend": [
+        {
+          "bas_dt": "2026-04-30",
+          "std_price": "1374.87",
+          "chg_pct": "3.6168"
+        },
+        {
+          "bas_dt": "2026-03-31",
+          "std_price": "1326.88",
+          "chg_pct": "2.0065"
+        },
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "1300.78",
+          "chg_pct": "0.6842"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "1291.94",
+          "chg_pct": "3.672"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "1246.18",
+          "chg_pct": "2.5485"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1215.21",
+          "chg_pct": "1.9129"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1192.4",
+          "chg_pct": "3.5906"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1151.07",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2026-04-30",
+        "std_price": "1374.87",
+        "query_dt": "",
+        "chg_pct": "3.6168"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1423.41",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F30_삼성누버거버먼이머징국공채플러스자H_Ce",
+      "srtn_cd": "K55105BG8743",
+      "fnd_nm": "삼성누버거버먼이머징국공채플러스자H_Ce",
+      "registry": {
+        "srtn_cd": "K55105BG8743",
+        "alias": "F30_삼성누버거버먼이머징국공채플러스자H_Ce",
+        "fnd_nm": "삼성누버거버먼이머징국공채플러스자H_Ce",
+        "korean_fund_nm": "삼성누버거버먼이머징국공채플러스증권자투자신탁H[채권-재간접형]_Ce",
+        "company_cd": "",
+        "fnd_tp": "채권"
+      },
+      "quarter": null,
+      "report_standard_dt": "20250925",
+      "bas_dt": "2025-09-25",
+      "price_trend": [
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "1205.92",
+          "chg_pct": "3.0992"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1169.67",
+          "chg_pct": "1.7096"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1150.01",
+          "chg_pct": "2.7161"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1119.6",
+          "chg_pct": "-0.6875"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1127.35",
+          "chg_pct": "-1.1677"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1140.67",
+          "chg_pct": "2.0633"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "1117.61",
+          "chg_pct": "0.9329"
+        },
+        {
+          "bas_dt": "2024-12-31",
+          "std_price": "1107.28",
+          "chg_pct": "0.8103"
+        },
+        {
+          "bas_dt": "2024-10-31",
+          "std_price": "1098.38",
+          "chg_pct": "-0.4207"
+        },
+        {
+          "bas_dt": "2024-09-30",
+          "std_price": "1103.02",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-09-30",
+        "std_price": "1205.92",
+        "query_dt": "",
+        "chg_pct": "3.0992"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1271.61",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F31_유경플레인바닐라글로벌리츠부동산자Ce",
+      "srtn_cd": "K55305D98083",
+      "fnd_nm": "유경플레인바닐라글로벌리츠부동산자Ce",
+      "registry": {
+        "srtn_cd": "K55305D98083",
+        "alias": "F31_유경플레인바닐라글로벌리츠부동산자Ce",
+        "fnd_nm": "유경플레인바닐라글로벌리츠부동산자Ce",
+        "korean_fund_nm": "유경플레인바닐라글로벌리츠인프라부동산자투자신탁(재간접형)Class C-e",
+        "company_cd": "",
+        "fnd_tp": "부동산/리츠"
+      },
+      "quarter": null,
+      "report_standard_dt": "20251231",
+      "bas_dt": "2025-12-31",
+      "price_trend": [
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "1302.11",
+          "chg_pct": "2.733"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "1267.47",
+          "chg_pct": "-1.7145"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "1289.58",
+          "chg_pct": "2.8685"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1253.62",
+          "chg_pct": "3.7027"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1208.86",
+          "chg_pct": "-3.2355"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1249.28",
+          "chg_pct": "-2.1454"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1276.67",
+          "chg_pct": "-2.5004"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1309.41",
+          "chg_pct": "4.4078"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "1254.13",
+          "chg_pct": "-3.2583"
+        },
+        {
+          "bas_dt": "2024-12-31",
+          "std_price": "1296.37",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-12-31",
+        "std_price": "1302.11",
+        "query_dt": "",
+        "chg_pct": "2.733"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1377.53",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F32_삼성누버거버먼미국리츠H_REITs재간접_Ce",
+      "srtn_cd": "K55105D00505",
+      "fnd_nm": "삼성누버거버먼미국리츠H[REITs재간접]Ce",
+      "registry": {
+        "srtn_cd": "K55105D00505",
+        "alias": "F32_삼성누버거버먼미국리츠H_REITs재간접_Ce",
+        "fnd_nm": "삼성누버거버먼미국리츠H[REITs재간접]Ce",
+        "korean_fund_nm": "삼성누버거버먼미국리츠부동산자투자신탁H[REITs-재간접형]_Ce",
+        "company_cd": "",
+        "fnd_tp": "재간접"
+      },
+      "quarter": null,
+      "report_standard_dt": "20260128",
+      "bas_dt": "2026-01-28",
+      "price_trend": [
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "990.97",
+          "chg_pct": "0.1091"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "989.89",
+          "chg_pct": "-2.4133"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "1014.37",
+          "chg_pct": "-1.1894"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1026.58",
+          "chg_pct": "1.4929"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1011.48",
+          "chg_pct": "0.1584"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1009.88",
+          "chg_pct": "-2.7306"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1038.23",
+          "chg_pct": "-2.2576"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1062.21",
+          "chg_pct": "1.964"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "1041.75",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-12-31",
+        "std_price": "990.97",
+        "query_dt": "",
+        "chg_pct": "0.1091"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1103.02",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F33_한화K리츠플러스부동산자H_리츠재간접C_e",
+      "srtn_cd": "K55213DA7961",
+      "fnd_nm": "한화K리츠플러스부동산자H-리츠재간접C-e",
+      "registry": {
+        "srtn_cd": "K55213DA7961",
+        "alias": "F33_한화K리츠플러스부동산자H_리츠재간접C_e",
+        "fnd_nm": "한화K리츠플러스부동산자H-리츠재간접C-e",
+        "korean_fund_nm": "한화K리츠플러스부동산 자투자신탁(H)(리츠-재간접형) C-e",
+        "company_cd": "",
+        "fnd_tp": "재간접"
+      },
+      "quarter": null,
+      "report_standard_dt": "20251231",
+      "bas_dt": "2025-12-31",
+      "price_trend": [
+        {
+          "bas_dt": "2025-12-31",
+          "std_price": "1171.76",
+          "chg_pct": "2.0555"
+        },
+        {
+          "bas_dt": "2025-10-31",
+          "std_price": "1148.16",
+          "chg_pct": "2.6252"
+        },
+        {
+          "bas_dt": "2025-09-30",
+          "std_price": "1118.79",
+          "chg_pct": "2.2296"
+        },
+        {
+          "bas_dt": "2025-07-31",
+          "std_price": "1094.39",
+          "chg_pct": "0.7614"
+        },
+        {
+          "bas_dt": "2025-06-30",
+          "std_price": "1086.12",
+          "chg_pct": "3.7314"
+        },
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1047.05",
+          "chg_pct": "1.3876"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1032.72",
+          "chg_pct": "-0.9609"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1042.74",
+          "chg_pct": "3.0294"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "1012.08",
+          "chg_pct": "-3.0909"
+        },
+        {
+          "bas_dt": "2024-12-31",
+          "std_price": "1044.36",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-12-31",
+        "std_price": "1171.76",
+        "query_dt": "",
+        "chg_pct": "2.0555"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1210.82",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    },
+    {
+      "status": "ok",
+      "alias": "F34_카디안미국뱅크론특별자산자_H_C_E",
+      "srtn_cd": "KR5229AO1239",
+      "fnd_nm": "카디안미국뱅크론특별자산자(H)C-E",
+      "registry": {
+        "srtn_cd": "KR5229AO1239",
+        "alias": "F34_카디안미국뱅크론특별자산자_H_C_E",
+        "fnd_nm": "카디안미국뱅크론특별자산자(H)C-E",
+        "korean_fund_nm": "카디안 미국뱅크론특별자산자투자신탁(H)[대출채권-재간접형] 클래스 C-E",
+        "company_cd": "",
+        "fnd_tp": "채권/특별자산"
+      },
+      "quarter": null,
+      "report_standard_dt": "20250525",
+      "bas_dt": "2025-05-25",
+      "price_trend": [
+        {
+          "bas_dt": "2025-04-30",
+          "std_price": "1124.19",
+          "chg_pct": "-0.2493"
+        },
+        {
+          "bas_dt": "2025-03-31",
+          "std_price": "1127",
+          "chg_pct": "-0.5568"
+        },
+        {
+          "bas_dt": "2025-02-28",
+          "std_price": "1133.31",
+          "chg_pct": "0.0494"
+        },
+        {
+          "bas_dt": "2025-01-31",
+          "std_price": "1132.75",
+          "chg_pct": "0.2922"
+        },
+        {
+          "bas_dt": "2024-12-31",
+          "std_price": "1129.45",
+          "chg_pct": "1.2624"
+        },
+        {
+          "bas_dt": "2024-10-31",
+          "std_price": "1115.37",
+          "chg_pct": "1.0674"
+        },
+        {
+          "bas_dt": "2024-09-30",
+          "std_price": "1103.59",
+          "chg_pct": "0.6438"
+        },
+        {
+          "bas_dt": "2024-07-31",
+          "std_price": "1096.53",
+          "chg_pct": "1.1065"
+        },
+        {
+          "bas_dt": "2024-05-31",
+          "std_price": "1084.53",
+          "chg_pct": ""
+        }
+      ],
+      "std_price_month_end": {
+        "kind": "month_end",
+        "bas_dt": "2025-04-30",
+        "std_price": "1124.19",
+        "query_dt": "",
+        "chg_pct": "-0.2493"
+      },
+      "std_price_latest": {
+        "kind": "latest_business",
+        "bas_dt": "2026-05-29",
+        "std_price": "1115.29",
+        "query_dt": "20260529",
+        "chg_pct": ""
+      }
+    }
+  ],
+  "failed_funds": [
+    {
+      "alias": "F28_NH_Amundi_JP모간글로벌배당증권자_H",
+      "srtn_cd": "K55232EJ2126",
+      "fnd_nm": "NH-Amundi JP모간글로벌배당증권자(H)Ae",
+      "registry": {
+        "srtn_cd": "K55232EJ2126",
+        "alias": "F28_NH_Amundi_JP모간글로벌배당증권자_H",
+        "fnd_nm": "NH-Amundi JP모간글로벌배당증권자(H)Ae",
+        "korean_fund_nm": "NH-Amundi JP모간 글로벌배당 증권자투자신탁(H)[주식-재간접형] Class Ae",
+        "company_cd": "",
+        "fnd_tp": "주식"
+      },
+      "error": "no_report_period",
+      "quarter": null
+    }
+  ],
+  "verification": {
+    "funds_total": 34,
+    "ok": 33,
+    "failed": 1,
+    "with_registry": 33,
+    "with_price_trend": 33,
+    "failure_rate": 0.0294
+  },
+  "gates": {
+    "G1_proframe_reachable": true,
+    "G2_price_trend": true,
+    "G_portfolio_report": true
+  }
+}
