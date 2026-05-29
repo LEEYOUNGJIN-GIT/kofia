@@ -1,4 +1,4 @@
-"""KOFIA dis.kofia ProFrame HTTP client (Playwright 없음)."""
+"""KOFIA dis.kofia ProFrame HTTP client."""
 
 from __future__ import annotations
 

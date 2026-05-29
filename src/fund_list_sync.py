@@ -146,8 +146,8 @@ def merge_funds(
         norm = _normalize_name(fund.get("fnd_nm", ""))
         if norm and norm not in seen_names:
             note = fund.get("notes") or ""
-            if "retired from holdings" not in note:
-                note = (note + " [retired from holdings doc]").strip()
+            if "retired from fund list" not in note:
+                note = (note + " [retired from fund list]").strip()
             retired.append({**fund, "enabled": False, "notes": note})
     return out, retired
 

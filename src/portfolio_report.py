@@ -45,7 +45,7 @@ def build_portfolio_report(
         },
         "funds": ok_list,
         "failed_funds": failed,
-        "writes": manifest.get("writes") or {},
+        "verification": manifest.get("verification") or {},
         "gates": manifest.get("gates") or {},
     }
 

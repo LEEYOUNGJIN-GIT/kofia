@@ -13,64 +13,47 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from dis_client import DisProframeClient, pick_fund_row, search_query_for_fund
-from dis_holdings import resolve_holdings
-from holdings_parse import holdings_manifest
-from dis_quarterly import allocation_from_bs, fetch_quarterly_allocation, validate_weight_sum
-from dis_reports import balance_sheet_to_allocation_rows, inquiry_report_periods, pick_report_period
+from dis_reports import inquiry_report_periods, pick_report_period
 from dis_grid import find_row_by_srtn_cd
-from dis_std_price import fetch_price_trend, month_end_dates_back, std_price_csv_rows
-from dis_top10 import top10_bs_from_bs
+from dis_std_price import (
+    fetch_price_trend,
+    fetch_std_price_latest_business,
+    month_end_dates_back,
+    month_end_series_from_trend,
+    latest_month_end_snapshot,
+)
 from portfolio_report import write_portfolio_report
-from timeseries_io import upsert_rows
 
 ROOT = Path(__file__).resolve().parents[1]
 CONFIG_PATH = ROOT / "config" / "fund_list.yaml"
 LOG_DIR = ROOT / "data" / "logs"
-TS_DIR = ROOT / "data" / "timeseries"
-PARSER_VERSION = "0.5.0"
+PARSER_VERSION = "0.9.0"
 REQUEST_DELAY_SEC = 1.2
 
-ALLOCATION_FIELDS = [
-    "srtn_cd",
-    "alias",
-    "bas_dt",
-    "report_type",
-    "asset_class",
-    "weight_pct",
-    "amount_mkrw",
-    "source_doc",
-    "fetched_at",
-]
-REGISTRY_FIELDS = [
-    "srtn_cd",
-    "alias",
-    "fnd_nm",
-    "korean_fund_nm",
-    "company_cd",
-    "fnd_tp",
-    "fetched_at",
-]
-STD_PRICE_FIELDS = [
-    "srtn_cd",
-    "alias",
-    "bas_dt",
-    "std_price",
-    "setup_dt",
-    "company_nm",
-    "korean_fund_nm",
-    "fetched_at",
-]
-TOP10_BS_FIELDS = [
-    "srtn_cd",
-    "alias",
-    "bas_dt",
-    "rank",
-    "name",
-    "asset_type",
-    "weight_pct",
-    "source_doc",
-    "fetched_at",
-]
+
+def verify_fetch_manifest(manifest: dict) -> dict:
+    ok = manifest.get("ok") or []
+    failed = manifest.get("failed") or []
+    total = len(ok) + len(failed)
+    return {
+        "funds_total": total,
+        "ok": len(ok),
+        "failed": len(failed),
+        "with_registry": sum(1 for f in ok if (f.get("registry") or {}).get("srtn_cd")),
+        "with_price_trend": sum(1 for f in ok if f.get("price_trend")),
+        "failure_rate": round(len(failed) / total, 4) if total else 0.0,
+    }
+
+
+def format_verify_report(stats: dict, gates: dict) -> str:
+    return "\n".join(
+        [
+            "=== fetch verification ===",
+            f"ok={stats['ok']} failed={stats['failed']} (failure_rate={stats['failure_rate']})",
+            f"registry={stats['with_registry']} price_trend={stats['with_price_trend']}",
+            f"gates={gates}",
+        ]
+    )
 
 
 def load_fund_list(path: Path, *, all_enabled: bool = False) -> list[dict]:
@@ -154,13 +137,20 @@ def run_dry_run(alias: str | None, fund_list_path: Path, *, all_funds: bool = Fa
             if not match:
                 failed.append({"alias": fund.get("alias"), "error": "no_match", "candidates": len(rows)})
                 continue
+            srtn_cd = match.get("standardCd") or ""
             results.append(
                 {
                     "alias": fund.get("alias"),
                     "fnd_nm": fnd_nm,
                     "srtn_cd_config": fund.get("srtn_cd"),
-                    "srtn_cd_dis": match.get("standardCd"),
-                    "koreanFundNm": match.get("koreanFundNm"),
+                    "srtn_cd_dis": srtn_cd,
+                    "registry": registry_manifest(
+                        srtn_cd=srtn_cd,
+                        alias=str(fund.get("alias") or ""),
+                        fnd_nm=fnd_nm,
+                        match=match,
+                        fund=fund,
+                    ),
                     "proframe_endpoint": "https://dis.kofia.or.kr/proframeWeb/XMLSERVICES/",
                     "search_query": query,
                 }
@@ -176,38 +166,37 @@ def run_dry_run(alias: str | None, fund_list_path: Path, *, all_funds: bool = Fa
         "failed": failed,
         "gates": {
             "G1_proframe_reachable": len(results) > 0,
-            "playwright_used": False,
         },
     }
 
 
-def _allocation_manifest_rows(rows: list[dict]) -> list[dict]:
+def registry_manifest(
+    *,
+    srtn_cd: str,
+    alias: str,
+    fnd_nm: str,
+    match: dict,
+    fund: dict,
+) -> dict[str, str]:
+    """DIS-resolved fund identity (embedded in portfolio JSON per fund)."""
+    return {
+        "srtn_cd": srtn_cd,
+        "alias": alias,
+        "fnd_nm": fnd_nm,
+        "korean_fund_nm": str(match.get("koreanFundNm", "")),
+        "company_cd": str(match.get("companyCd", "")),
+        "fnd_tp": str(fund.get("fnd_tp", "")),
+    }
+
+
+def _price_trend_manifest(rows: list[dict]) -> list[dict]:
     return [
         {
-            "asset_class": r.get("asset_class"),
-            "weight_pct": str(r.get("weight_pct", "")),
-            "amount_mkrw": str(r.get("amount_mkrw", "")),
-            "bas_dt": r.get("bas_dt"),
-            "report_type": r.get("report_type"),
+            "bas_dt": p.get("bas_dt"),
+            "std_price": p.get("std_price"),
+            "chg_pct": p.get("chg_pct"),
         }
-        for r in rows
-    ]
-
-
-def _holdings_manifest(rows: list[dict]) -> list[dict]:
-    return holdings_manifest(rows)
-
-
-def _top10_bs_manifest(rows: list[dict]) -> list[dict]:
-    return [
-        {
-            "rank": r.get("rank"),
-            "name": r.get("name"),
-            "weight_pct": r.get("weight_pct"),
-            "asset_type": r.get("asset_type"),
-            "source_doc": r.get("source_doc"),
-        }
-        for r in rows
+        for p in rows
     ]
 
 
@@ -217,18 +206,11 @@ def _fetch_one_fund(
     *,
     quarter: str | None,
     grid_cache: dict[tuple[str, str], list[dict[str, str]]],
-    use_gemini: bool = False,
-    use_dart: bool = False,
-    use_funddoctor: bool = False,
     price_days: int = 365,
-) -> tuple[dict | None, dict | None, list[dict], list[dict], list[dict], list[dict], list[str]]:
+) -> tuple[dict | None, dict | None, list[str]]:
     fnd_nm = fund["fnd_nm"]
     fund_alias = fund.get("alias") or ""
     warnings: list[str] = []
-    registry_rows: list[dict[str, str]] = []
-    allocation_rows: list[dict[str, str]] = []
-    std_price_rows: list[dict[str, str]] = []
-    top10_bs_csv: list[dict[str, str]] = []
 
     query = search_query_for_fund(fnd_nm, fund_alias)
     time.sleep(REQUEST_DELAY_SEC)
@@ -240,21 +222,18 @@ def _fetch_one_fund(
         alias=fund_alias,
     )
     if not match:
-        return None, {"alias": fund_alias, "error": "no_match"}, [], [], [], [], []
+        return None, {"alias": fund_alias, "error": "no_match"}, []
 
     srtn_cd = match.get("standardCd") or fund.get("srtn_cd") or ""
     if not srtn_cd:
-        return None, {"alias": fund_alias, "error": "no_srtn_cd"}, [], [], [], [], []
+        return None, {"alias": fund_alias, "error": "no_srtn_cd"}, []
 
-    registry_rows.append(
-        {
-            "srtn_cd": srtn_cd,
-            "alias": fund_alias,
-            "fnd_nm": fnd_nm,
-            "korean_fund_nm": match.get("koreanFundNm", ""),
-            "company_cd": match.get("companyCd", ""),
-            "fnd_tp": fund.get("fnd_tp", ""),
-        }
+    reg = registry_manifest(
+        srtn_cd=srtn_cd,
+        alias=fund_alias,
+        fnd_nm=fnd_nm,
+        match=match,
+        fund=fund,
     )
 
     bas_hint = quarter_to_bas_dt_hint(quarter) if quarter else None
@@ -263,7 +242,17 @@ def _fetch_one_fund(
     periods = inquiry_report_periods(client, srtn_cd)
     period = pick_report_period(periods, bas_dt_hint=bas_hint)
     if not period:
-        return None, {"alias": fund_alias, "error": "no_report_period"}, registry_rows, [], [], [], []
+        return (
+            None,
+            {
+                "alias": fund_alias,
+                "srtn_cd": srtn_cd,
+                "fnd_nm": fnd_nm,
+                "registry": reg,
+                "error": "no_report_period",
+            },
+            [],
+        )
 
     anchor_dt = bas_hint or period.get("standardDt") or ""
     price_trend = fetch_price_trend(
@@ -280,81 +269,23 @@ def _fetch_one_fund(
         latest_key = (query, month_end_dates_back(anchor_dt, 1)[0])
         grid_row = find_row_by_srtn_cd(grid_cache.get(latest_key, []), srtn_cd)
         if grid_row and grid_row.get("tmpV6"):
-            from dis_std_price import price_history_from_grid  # noqa: PLC0415
+            from dis_std_price import grid_row_to_price_point  # noqa: PLC0415
 
-            bas_dt_raw = grid_row.get("tmpV14") or grid_row.get("tmpV4") or ""
-            price_trend = price_history_from_grid(
-                [
-                    {
-                        "tmpV12": srtn_cd,
-                        "tmpV14": bas_dt_raw,
-                        "tmpV6": grid_row.get("tmpV6", ""),
-                        "tmpV7": grid_row.get("tmpV7", ""),
-                        "tmpV4": grid_row.get("tmpV4", ""),
-                        "tmpV1": grid_row.get("tmpV1", ""),
-                        "tmpV2": grid_row.get("tmpV2", ""),
-                    }
-                ],
-                srtn_cd=srtn_cd,
-                alias=fund_alias,
-                max_days=1,
-            )
-    std_price_rows = std_price_csv_rows(price_trend)
+            single = grid_row_to_price_point(grid_row, srtn_cd=srtn_cd, alias=fund_alias)
+            if single:
+                price_trend = [single]
+
+    price_trend_month_end = month_end_series_from_trend(price_trend)
+    std_price_month_end = latest_month_end_snapshot(price_trend)
 
     time.sleep(REQUEST_DELAY_SEC)
-    q_rows = fetch_quarterly_allocation(
+    std_price_latest = fetch_std_price_latest_business(
         client,
-        srtn_cd=srtn_cd,
+        query,
+        srtn_cd,
+        grid_cache=grid_cache,
         alias=fund_alias,
-        standard_dt=period["standardDt"],
-        tx_cd=period.get("txCd", "2RF0100"),
-        tx_vsn=period.get("txVsn", "1"),
-    )
-    from dis_reports import fetch_balance_sheet
-
-    if not q_rows:
-        bs = fetch_balance_sheet(
-            client,
-            srtn_cd=srtn_cd,
-            standard_dt=period["standardDt"],
-            tx_cd=period.get("txCd", "2RF0100"),
-            tx_vsn=period.get("txVsn", "1"),
-        )
-        q_rows = balance_sheet_to_allocation_rows(bs, srtn_cd=srtn_cd, alias=fund_alias)
-        if not q_rows:
-            q_rows = allocation_from_bs(bs, srtn_cd=srtn_cd, alias=fund_alias)
-        bs_for_top10 = bs
-    else:
-        time.sleep(REQUEST_DELAY_SEC)
-        bs_for_top10 = fetch_balance_sheet(
-            client,
-            srtn_cd=srtn_cd,
-            standard_dt=period["standardDt"],
-            tx_cd=period.get("txCd", "2RF0100"),
-            tx_vsn=period.get("txVsn", "1"),
-        )
-
-    for row in q_rows:
-        allocation_rows.append({k: str(v) for k, v in row.items()})
-
-    w = validate_weight_sum(q_rows)
-    if w:
-        warnings.append(f"{fund_alias}:{w}")
-
-    top10_bs = top10_bs_from_bs(bs_for_top10, srtn_cd=srtn_cd, alias=fund_alias)
-    for row in top10_bs:
-        top10_bs_csv.append({k: str(v) for k, v in row.items()})
-
-    holdings, holdings_status, holdings_source = resolve_holdings(
-        client,
-        period=period,
-        bs=bs_for_top10,
-        srtn_cd=srtn_cd,
-        fnd_nm=fnd_nm,
-        fund=fund,
-        use_gemini=use_gemini,
-        use_dart=use_dart,
-        use_funddoctor=use_funddoctor,
+        delay_sec=REQUEST_DELAY_SEC,
     )
 
     bas_dt_fmt = period.get("standardDt", "")
@@ -366,28 +297,15 @@ def _fetch_one_fund(
         "alias": fund_alias,
         "srtn_cd": srtn_cd,
         "fnd_nm": fnd_nm,
+        "registry": reg,
         "quarter": quarter,
         "report_standard_dt": period.get("standardDt"),
         "bas_dt": bas_dt_fmt,
-        "allocation": _allocation_manifest_rows(q_rows),
-        "top10_bs": _top10_bs_manifest(top10_bs),
-        "holdings": _holdings_manifest(holdings),
-        "holdings_count": len(holdings),
-        "holdings_status": holdings_status,
-        "holdings_source": holdings_source,
-        "top10": _holdings_manifest(holdings),
-        "top10_status": holdings_status,
-        "top10_source": holdings_source,
-        "price_trend": [
-            {
-                "bas_dt": p.get("bas_dt"),
-                "std_price": p.get("std_price"),
-                "chg_pct": p.get("chg_pct"),
-            }
-            for p in price_trend
-        ],
+        "price_trend": _price_trend_manifest(price_trend_month_end or price_trend),
+        "std_price_month_end": std_price_month_end,
+        "std_price_latest": std_price_latest,
     }
-    return ok_entry, None, registry_rows, allocation_rows, std_price_rows, top10_bs_csv, warnings
+    return ok_entry, None, warnings
 
 
 def run_fetch(
@@ -397,11 +315,7 @@ def run_fetch(
     quarter: str | None = None,
     quarters: list[str] | None = None,
     all_funds: bool = False,
-    use_gemini: bool = False,
-    use_dart: bool = False,
-    use_funddoctor: bool = False,
     price_days: int = 365,
-    write_top10_csv: bool = False,
 ) -> dict:
     funds = load_fund_list(fund_list_path, all_enabled=all_funds)
     if alias:
@@ -411,10 +325,6 @@ def run_fetch(
 
     q_list = quarters or ([quarter] if quarter else [None])
     client = DisProframeClient()
-    registry_rows: list[dict[str, str]] = []
-    allocation_rows: list[dict[str, str]] = []
-    std_price_rows: list[dict[str, str]] = []
-    top10_bs_rows: list[dict[str, str]] = []
     ok: list[dict] = []
     failed: list[dict] = []
     warnings: list[str] = []
@@ -423,14 +333,11 @@ def run_fetch(
     for q in q_list:
         for fund in funds:
             try:
-                o, f, reg, alloc, std, t10bs, w = _fetch_one_fund(
+                o, f, w = _fetch_one_fund(
                     client,
                     fund,
                     quarter=q,
                     grid_cache=grid_cache,
-                    use_gemini=use_gemini,
-                    use_dart=use_dart,
-                    use_funddoctor=use_funddoctor,
                     price_days=price_days,
                 )
                 warnings.extend(w)
@@ -439,11 +346,6 @@ def run_fetch(
                     failed.append(f)
                     continue
                 if o:
-                    registry_rows.extend(reg)
-                    allocation_rows.extend(alloc)
-                    std_price_rows.extend(std)
-                    if write_top10_csv:
-                        top10_bs_rows.extend(t10bs)
                     ok.append(o)
             except Exception as exc:  # noqa: BLE001
                 failed.append(
@@ -455,37 +357,7 @@ def run_fetch(
                     }
                 )
 
-    n_alloc = upsert_rows(
-        TS_DIR / "fund_allocation.csv",
-        allocation_rows,
-        ["srtn_cd", "bas_dt", "asset_class"],
-        fieldnames=ALLOCATION_FIELDS,
-    )
-    n_reg = upsert_rows(
-        TS_DIR / "fund_registry.csv",
-        registry_rows,
-        ["srtn_cd"],
-        fieldnames=REGISTRY_FIELDS,
-    )
-    n_std = upsert_rows(
-        TS_DIR / "fund_std_price.csv",
-        std_price_rows,
-        ["srtn_cd", "bas_dt"],
-        fieldnames=STD_PRICE_FIELDS,
-    )
-    n_top10_bs = 0
-    if write_top10_csv:
-        n_top10_bs = upsert_rows(
-            TS_DIR / "fund_holdings_top10.csv",
-            top10_bs_rows,
-            ["srtn_cd", "bas_dt", "rank"],
-            fieldnames=TOP10_BS_FIELDS,
-        )
-
-    unique_classes = len({r["asset_class"] for r in allocation_rows}) if allocation_rows else 0
-    has_holdings = any(
-        (f.get("holdings") or f.get("top10") or f.get("top10_bs")) for f in ok
-    )
+    has_price_trend = any(f.get("price_trend") for f in ok)
 
     return {
         "parser_version": PARSER_VERSION,
@@ -496,23 +368,13 @@ def run_fetch(
         "ok": ok,
         "failed": failed,
         "warnings": warnings,
-        "writes": {
-            "fund_allocation.csv": n_alloc,
-            "fund_registry.csv": n_reg,
-            "fund_std_price.csv": n_std,
-            "fund_holdings_top10.csv": n_top10_bs,
-        },
+        "verification": verify_fetch_manifest(
+            {"ok": ok, "failed": failed, "mode": "fetch"}
+        ),
         "gates": {
             "G1_proframe_reachable": len(ok) > 0,
-            "G2_allocation_csv": n_alloc > 0,
-            "G5_holdings": has_holdings,
-            "G5_top10": has_holdings,
+            "G2_price_trend": has_price_trend,
             "G_portfolio_report": len(ok) > 0,
-            "G2_multi_asset_class": unique_classes >= 1,
-            "playwright_used": False,
-            "gemini_used": use_gemini and bool(__import__("os").environ.get("GEMINI_API_KEY")),
-            "dart_used": use_dart and bool(__import__("os").environ.get("OPENDART_API_KEY")),
-            "funddoctor_used": use_funddoctor,
         },
     }
 
@@ -525,26 +387,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--backfill", type=int, help="Backfill last N quarters")
     parser.add_argument("--alias", help="Single fund alias")
     parser.add_argument("--all-funds", action="store_true", help="Process all funds in yaml (not only enabled)")
-    parser.add_argument("--sync", action="store_true", help="Sync holdings.md → fund_list.yaml first")
+    parser.add_argument("--sync", action="store_true", help="Sync fund list md → fund_list.yaml first")
     parser.add_argument("--dry-run", action="store_true", help="ProFrame connectivity only (G1)")
-    parser.add_argument("--fetch", action="store_true", help="Fetch registry, allocation, top10 (G2)")
-    parser.add_argument(
-        "--gemini",
-        action="store_true",
-        help="Gemini holdings from KOFIA/DART report when earlier steps fail",
-    )
-    parser.add_argument(
-        "--dart",
-        action="store_true",
-        help="DART document fallback after KOFIA (needs OPENDART_API_KEY)",
-    )
-    parser.add_argument(
-        "--funddoctor",
-        action="store_true",
-        help="funddoctor report fallback when fund_list has funddoctor.memb_cd/pfund_cd",
-    )
-    parser.add_argument("--price-days", type=int, default=365, help="Max price history days in manifest/CSV")
-    parser.add_argument("--write-top10-csv", action="store_true", help="Write top10_bs to fund_holdings_top10.csv")
+    parser.add_argument("--fetch", action="store_true", help="Fetch registry and prices (G2)")
+    parser.add_argument("--price-days", type=int, default=365, help="Max price history days in portfolio JSON")
     parser.add_argument("--config", type=Path, default=CONFIG_PATH)
     args = parser.parse_args(argv)
 
@@ -575,11 +421,7 @@ def main(argv: list[str] | None = None) -> int:
             quarter=args.quarter if not quarters else None,
             quarters=quarters,
             all_funds=args.all_funds,
-            use_gemini=args.gemini,
-            use_dart=args.dart,
-            use_funddoctor=args.funddoctor,
             price_days=args.price_days,
-            write_top10_csv=args.write_top10_csv,
         )
         suffix = "fetch"
     elif args.sync:
@@ -602,19 +444,26 @@ def main(argv: list[str] | None = None) -> int:
             funds_meta=funds_meta,
         )
         print(f"Wrote {report_path}", file=sys.stderr)
+        stats = manifest.get("verification") or verify_fetch_manifest(manifest)
+        print(format_verify_report(stats, manifest.get("gates") or {}), file=sys.stderr)
 
     if args.dry_run:
         return 0 if manifest["gates"]["G1_proframe_reachable"] and not manifest["failed"] else 1
 
     if args.all_funds and not args.alias:
-        return 0 if len(manifest.get("ok") or []) >= 1 else 1
+        ok_n = len(manifest.get("ok") or [])
+        failed_n = len(manifest.get("failed") or [])
+        if ok_n < 1:
+            return 1
+        if failed_n and failed_n > ok_n:
+            return 1
+        gates = manifest.get("gates") or {}
+        if not gates.get("G2_price_trend"):
+            return 1
+        return 0
 
     gates = manifest["gates"]
-    ok_fetch = (
-        gates.get("G2_allocation_csv")
-        and (gates.get("G5_holdings") or gates.get("G5_top10"))
-        and not manifest["failed"]
-    )
+    ok_fetch = gates.get("G2_price_trend") and not manifest["failed"]
     return 0 if ok_fetch else 1
 
 

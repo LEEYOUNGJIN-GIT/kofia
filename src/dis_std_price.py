@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import time
 from calendar import monthrange
-from datetime import datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from typing import Any
+
+from dis_grid import find_row_by_srtn_cd
 
 
 def month_end_dates_back(anchor_yyyymmdd: str, months: int) -> list[str]:
@@ -68,6 +70,28 @@ def _format_bas_dt(raw: str) -> str:
     return raw
 
 
+def _parse_price(raw: str) -> float | None:
+    try:
+        return float(str(raw).replace(",", "").strip())
+    except ValueError:
+        return None
+
+
+def _format_chg_pct(pct: float) -> str:
+    return f"{pct:.4f}".rstrip("0").rstrip(".")
+
+
+def apply_chg_pct_from_prices(points: list[dict[str, Any]]) -> None:
+    """chg_pct = % change vs next-older point (tmpV7 is prior price on DIS grid, not %)."""
+    for i, row in enumerate(points):
+        cur = _parse_price(str(row.get("std_price", "")))
+        older = _parse_price(str(points[i + 1].get("std_price", ""))) if i + 1 < len(points) else None
+        if cur is not None and older is not None and older != 0:
+            row["chg_pct"] = _format_chg_pct((cur - older) / older * 100.0)
+        else:
+            row["chg_pct"] = ""
+
+
 def price_history_from_grid(
     grid_rows: list[dict[str, str]],
     *,
@@ -76,7 +100,7 @@ def price_history_from_grid(
     max_days: int | None = 365,
 ) -> list[dict[str, Any]]:
     """All selectMeta rows for one fund (tmpV12 = srtn_cd)."""
-    out: list[dict[str, Any]] = []
+    by_date: dict[str, dict[str, Any]] = {}
     fetched_at = datetime.now(timezone.utc).isoformat()
 
     for row in grid_rows:
@@ -86,20 +110,21 @@ def price_history_from_grid(
         std_price = row.get("tmpV6") or ""
         if not bas_dt and not std_price:
             continue
-        out.append(
-            {
-                "bas_dt": bas_dt,
-                "std_price": std_price,
-                "chg_pct": row.get("tmpV7") or "",
-                "setup_dt": _format_bas_dt(row.get("tmpV4") or ""),
-                "company_nm": row.get("tmpV1") or "",
-                "korean_fund_nm": row.get("tmpV2") or "",
-            }
-        )
+        prior_price = row.get("tmpV7") or ""
+        by_date[bas_dt] = {
+            "bas_dt": bas_dt,
+            "std_price": std_price,
+            "prior_std_price": prior_price,
+            "setup_dt": _format_bas_dt(row.get("tmpV4") or ""),
+            "company_nm": row.get("tmpV1") or "",
+            "korean_fund_nm": row.get("tmpV2") or "",
+        }
 
-    out.sort(key=lambda x: x.get("bas_dt") or "", reverse=True)
+    out = sorted(by_date.values(), key=lambda x: x.get("bas_dt") or "", reverse=True)
     if max_days and len(out) > max_days:
         out = out[:max_days]
+
+    apply_chg_pct_from_prices(out)
 
     for row in out:
         row["srtn_cd"] = srtn_cd
@@ -109,19 +134,141 @@ def price_history_from_grid(
     return out
 
 
-def std_price_csv_rows(price_trend: list[dict[str, Any]]) -> list[dict[str, str]]:
-    rows: list[dict[str, str]] = []
-    for pt in price_trend:
-        rows.append(
+def _parse_iso_date(bas_dt: str) -> date | None:
+    raw = (bas_dt or "").strip()
+    if len(raw) == 10 and raw[4] == "-":
+        try:
+            return date(int(raw[:4]), int(raw[5:7]), int(raw[8:10]))
+        except ValueError:
+            return None
+    if len(raw) == 8 and raw.isdigit():
+        try:
+            return date(int(raw[:4]), int(raw[4:6]), int(raw[6:8]))
+        except ValueError:
+            return None
+    return None
+
+
+def is_calendar_month_end(bas_dt: str) -> bool:
+    d = _parse_iso_date(bas_dt)
+    if not d:
+        return False
+    return d.day == monthrange(d.year, d.month)[1]
+
+
+def business_days_back(
+    from_dt: datetime | None = None,
+    *,
+    max_calendar_days: int = 15,
+) -> list[str]:
+    """Recent weekdays (YYYYMMDD), newest first — KOFIA grid uses tmpV30 as as-of date."""
+    d = (from_dt or datetime.now(timezone.utc)).date()
+    out: list[str] = []
+    for _ in range(max_calendar_days):
+        if d.weekday() < 5:
+            out.append(d.strftime("%Y%m%d"))
+        d -= timedelta(days=1)
+    return out
+
+
+def price_snapshot_manifest(
+    row: dict[str, Any] | None,
+    *,
+    kind: str,
+    query_dt: str = "",
+) -> dict[str, str]:
+    if not row:
+        return {}
+    return {
+        "kind": kind,
+        "bas_dt": str(row.get("bas_dt", "")),
+        "std_price": str(row.get("std_price", "")),
+        "query_dt": query_dt,
+        "chg_pct": str(row.get("chg_pct", "")),
+    }
+
+
+def month_end_series_from_trend(price_trend: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return [p for p in price_trend if is_calendar_month_end(str(p.get("bas_dt", "")))]
+
+
+def latest_month_end_snapshot(price_trend: list[dict[str, Any]]) -> dict[str, str]:
+    series = month_end_series_from_trend(price_trend)
+    if not series:
+        return {}
+    return price_snapshot_manifest(series[0], kind="month_end")
+
+
+def grid_row_to_price_point(
+    grid_row: dict[str, str],
+    *,
+    srtn_cd: str,
+    alias: str = "",
+) -> dict[str, Any]:
+    bas_dt_raw = grid_row.get("tmpV14") or grid_row.get("tmpV4") or ""
+    points = price_history_from_grid(
+        [
             {
-                "srtn_cd": str(pt.get("srtn_cd", "")),
-                "alias": str(pt.get("alias", "")),
-                "bas_dt": str(pt.get("bas_dt", "")),
-                "std_price": str(pt.get("std_price", "")),
-                "setup_dt": str(pt.get("setup_dt", "")),
-                "company_nm": str(pt.get("company_nm", "")),
-                "korean_fund_nm": str(pt.get("korean_fund_nm", "")),
-                "fetched_at": str(pt.get("fetched_at", "")),
+                "tmpV12": srtn_cd,
+                "tmpV14": bas_dt_raw,
+                "tmpV6": grid_row.get("tmpV6", ""),
+                "tmpV7": grid_row.get("tmpV7", ""),
+                "tmpV4": grid_row.get("tmpV4", ""),
+                "tmpV1": grid_row.get("tmpV1", ""),
+                "tmpV2": grid_row.get("tmpV2", ""),
             }
+        ],
+        srtn_cd=srtn_cd,
+        alias=alias,
+        max_days=1,
+    )
+    return points[0] if points else {}
+
+
+def fetch_std_price_as_of(
+    client: Any,
+    search_query: str,
+    srtn_cd: str,
+    tmpV30_yyyymmdd: str,
+    *,
+    grid_cache: dict[tuple[str, str], list[dict[str, str]]],
+    alias: str = "",
+    delay_sec: float = 0.0,
+) -> dict[str, Any]:
+    key = (search_query, tmpV30_yyyymmdd)
+    if key not in grid_cache:
+        if delay_sec:
+            time.sleep(delay_sec)
+        grid_cache[key] = client.fetch_std_price_grid(search_query, bas_dt=tmpV30_yyyymmdd)
+    row = find_row_by_srtn_cd(grid_cache[key], srtn_cd)
+    if not row or not row.get("tmpV6"):
+        return {}
+    return grid_row_to_price_point(row, srtn_cd=srtn_cd, alias=alias)
+
+
+def fetch_std_price_latest_business(
+    client: Any,
+    search_query: str,
+    srtn_cd: str,
+    *,
+    grid_cache: dict[tuple[str, str], list[dict[str, str]]],
+    alias: str = "",
+    delay_sec: float = 0.8,
+    from_dt: datetime | None = None,
+) -> dict[str, str]:
+    """Latest weekday std price near fetch time (tmpV30 = that business day)."""
+    for query_dt in business_days_back(from_dt):
+        point = fetch_std_price_as_of(
+            client,
+            search_query,
+            srtn_cd,
+            query_dt,
+            grid_cache=grid_cache,
+            alias=alias,
+            delay_sec=delay_sec,
         )
-    return rows
+        if point:
+            return price_snapshot_manifest(point, kind="latest_business", query_dt=query_dt)
+    return {}
+
+

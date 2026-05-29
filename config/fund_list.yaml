@@ -1,5 +1,5 @@
 source: docs/holdings_fund_list.md
-synced_at: '2026-05-29T04:04:31.631995+00:00'
+synced_at: '2026-05-29T08:33:01.049597+00:00'
 funds:
 - srtn_cd: ''
   alias: F01_한국투자미국배당귀족증권자H_주식_C_e
@@ -90,7 +90,7 @@ funds:
   alias: TDF2050_Ce
   fnd_nm: 미래에셋전략배분적격TDF2050혼합자C-e
   fnd_tp: 혼합(TDF)
-  enabled: true
+  enabled: false
 - srtn_cd: ''
   alias: F19_미래에셋로저스Commodity인덱스특별자C
   fnd_nm: 미래에셋로저스Commodity인덱스특별자C-e

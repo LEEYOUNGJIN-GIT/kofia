@@ -9,7 +9,7 @@
 1. 아래 **「일반펀드」** 표를 편집한다 (추가·삭제·`enabled` 변경).
 2. (로컬) `python src/fund_list_sync.py` 로 YAML 미리보기·반영.
 3. 변경을 `main`에 push 하거나, Actions에서 **Sync fund list and fetch** → `workflow_dispatch` 실행.
-4. 워크플로가 `holdings` → `fund_list.yaml` 동기화 후 fetch 한다.
+4. 워크플로가 펀드 목록 → `fund_list.yaml` 동기화 후 fetch 하고, **`data/reports/fund_portfolio_analysis_YYYYMMDD.json`** 을 저장소에 커밋한다.
 
 | 단계 | 담당 |
 |------|------|
@@ -23,7 +23,7 @@
 | `펀드명` | dis 검색·매칭 기준 (**정확히 기재**) |
 | `유형` | 참고용 (`fnd_tp`) |
 | `srtn_cd` | 12자리 표준코드 (비우면 기존 YAML 값 유지) |
-| `alias` | CSV·CLI 식별자 (비우면 자동 생성) |
+| `alias` | CLI 식별자 (비우면 자동 생성) |
 | `enabled` | `true`/`false` — 로컬 `--fetch`·`enabled_only` GHA 입력 시 필터; 기본 GHA fetch는 표 전체 |
 
 표에서 **삭제한 펀드**는 YAML에 남고 `enabled: false` 로 표시된다 (이력·`srtn_cd` 보존).
@@ -63,7 +63,7 @@
 | 15 | 삼성ABF코리아장기채권인덱스증권[채권]Re | 채권 | | | false |
 | 16 | 유진챔피언중단기채증권자투자(채권)Ce | 채권 | | | false |
 | 17 | 미래에셋브라질하이인컴채권자[채권]Ce | 채권 | | | false |
-| 18 | 미래에셋전략배분적격TDF2050혼합자C-e | 혼합(TDF) | K55301D51271 | TDF2050_Ce | true |
+| 18 | 미래에셋전략배분적격TDF2050혼합자C-e | 혼합(TDF) | | | false |
 | 19 | 미래에셋로저스Commodity인덱스특별자C-e | 기타/원자재 | | | false |
 | 20 | 카디안미국투자적격회사채자[H]C-E | 채권 | | | false |
 | 21 | 하나글로벌리츠부동산자[재간접형]C-E | 재간접 | | | false |

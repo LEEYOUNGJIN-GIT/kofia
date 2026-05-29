@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       sync_only:
-        description: "Only sync holdings.md → fund_list.yaml (skip fetch)"
+        description: "Only sync fund list md → fund_list.yaml (skip fetch)"
         type: boolean
         default: false
       alias:
@@ -23,22 +23,6 @@ on:
         description: "Commit updated fund_list.yaml when sync changes it"
         type: boolean
         default: true
-      commit_data:
-        description: "Commit timeseries CSV after fetch"
-        type: boolean
-        default: false
-      use_gemini:
-        description: "Gemini holdings parse when KOFIA SO has no rows"
-        type: boolean
-        default: false
-      use_dart:
-        description: "DART document fallback (needs OPENDART_API_KEY secret)"
-        type: boolean
-        default: true
-      use_funddoctor:
-        description: "funddoctor fallback when fund_list has funddoctor mapping"
-        type: boolean
-        default: false
   push:
     branches: [main, master]
     paths:
@@ -61,7 +45,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Sync holdings → fund_list.yaml
+      - name: Sync fund list → fund_list.yaml
         run: python src/fund_list_sync.py
 
       - name: Commit fund_list.yaml (if changed)
@@ -77,11 +61,8 @@ jobs:
             git push
           fi
 
-      - name: Fetch dis data (all listed funds)
+      - name: Fetch dis data (registry + prices)
         if: github.event_name == 'push' || github.event.inputs.sync_only != 'true'
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          OPENDART_API_KEY: ${{ secrets.OPENDART_API_KEY }}
         run: |
           ARGS="src/dis_parser.py --fetch"
           ALIAS=""
@@ -98,30 +79,19 @@ jobs:
           if [ -n "${{ github.event.inputs.quarter }}" ]; then
             ARGS="$ARGS --quarter ${{ github.event.inputs.quarter }}"
           fi
-          if [ "${{ github.event.inputs.use_gemini }}" = "true" ]; then
-            ARGS="$ARGS --gemini"
-          fi
-          if [ "${{ github.event_name }}" = "push" ] || [ "${{ github.event.inputs.use_dart }}" = "true" ]; then
-            ARGS="$ARGS --dart"
-          fi
-          if [ "${{ github.event.inputs.use_funddoctor }}" = "true" ]; then
-            ARGS="$ARGS --funddoctor"
-          fi
           python $ARGS
 
-      - name: Commit timeseries (if enabled)
-        if: |
-          (github.event_name == 'push') ||
-          (github.event_name == 'workflow_dispatch' && github.event.inputs.commit_data == 'true')
+      - name: Commit portfolio report JSON
+        if: github.event_name == 'push' || github.event.inputs.sync_only != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git pull --rebase origin main || true
-          git add data/timeseries data/logs data/reports
+          git add data/reports/*.json docs/holdings_fund_list.md config/fund_list.yaml
           if git diff --staged --quiet; then
-            echo "No data changes"
+            echo "No portfolio report changes"
           else
-            git commit -m "chore(data): dis fetch $(date -u +%Y%m%d)"
+            git commit -m "chore(data): portfolio report $(date -u +%Y%m%d)"
             git push
           fi
 
@@ -132,7 +102,5 @@ jobs:
           name: kofia-pipeline-${{ github.run_id }}
           if-no-files-found: ignore
           path: |
-            config/fund_list.yaml
             data/reports/*.json
-            data/timeseries/*.csv
             data/logs/run_*_fetch.json
