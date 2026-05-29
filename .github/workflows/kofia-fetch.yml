@@ -1,0 +1,90 @@
+name: Kofia fetch (dis ProFrame)
+
+on:
+  workflow_dispatch:
+    inputs:
+      alias:
+        description: "Fund alias (empty = default TDF2050_Ce)"
+        required: false
+        default: ""
+      quarter:
+        description: "Quarter e.g. 2025Q3 (optional)"
+        required: false
+        default: ""
+      all_funds:
+        description: "Process all enabled funds in fund_list.yaml"
+        type: boolean
+        default: false
+      use_gemini:
+        description: "Run optional Gemini pass"
+        type: boolean
+        default: false
+      commit_data:
+        description: "Commit timeseries CSV to repo (default off until operator enables)"
+        type: boolean
+        default: false
+  push:
+    branches: [main, master]
+    paths:
+      - "src/**"
+      - "config/**"
+      - ".github/workflows/kofia-fetch.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Fetch dis data (HTTP)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          ARGS="src/dis_parser.py --fetch"
+          if [ "${{ github.event.inputs.all_funds }}" = "true" ]; then
+            ARGS="$ARGS --all-funds"
+          elif [ -n "${{ github.event.inputs.alias }}" ]; then
+            ARGS="$ARGS --alias ${{ github.event.inputs.alias }}"
+          else
+            ARGS="$ARGS --alias TDF2050_Ce"
+          fi
+          if [ -n "${{ github.event.inputs.quarter }}" ]; then
+            ARGS="$ARGS --quarter ${{ github.event.inputs.quarter }}"
+          fi
+          if [ "${{ github.event.inputs.use_gemini }}" = "true" ]; then
+            ARGS="$ARGS --gemini"
+          fi
+          python $ARGS
+
+      - name: Commit timeseries (if enabled)
+        if: github.event.inputs.commit_data == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/timeseries data/logs
+          if git diff --staged --quiet; then
+            echo "No data changes to commit"
+          else
+            git commit -m "chore(data): dis fetch $(date -u +%Y%m%d)"
+            git push
+          fi
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kofia-fetch-${{ github.run_id }}
+          path: |
+            data/timeseries/*.csv
+            data/logs/run_*_fetch.json

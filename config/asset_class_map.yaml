@@ -1,0 +1,43 @@
+# 공시 계정/필드 → canonical asset_class (dis 결산 BS·손익 필드)
+fields:
+  stock: equity
+  bond: bond
+  profitBnd: profit_bnd
+  cdAmt: cash
+  depositAmt: cash
+  bill: cash
+  callLoan: cash
+  rpBuyAmt: repo
+  otherScr: other
+  otherAss: other
+  futureBuy: derivative
+  futureExBuyAmt: derivative
+  callOptBuy: derivative
+  putOptBuy: derivative
+  swapPur: derivative
+  publicColSrpAmt: securitized
+  notIcmDivAmt: dividend_receivable
+  trustPrfAmt: trust_asset
+  liquidAssPrf: cash_equiv
+
+# BS 필드 한글 라벨 (top10 name 컬럼용)
+labels:
+  stock: "주식"
+  bond: "채권"
+  profitBnd: "수익증권"
+  cdAmt: "CD"
+  depositAmt: "예금"
+  bill: "어음"
+  callLoan: "콜론"
+  rpBuyAmt: "RP매수"
+  otherScr: "기타유가증권"
+  otherAss: "기타자산"
+  futureBuy: "선물매수"
+  futureExBuyAmt: "해외선물매수"
+  callOptBuy: "콜옵션매수"
+  putOptBuy: "풋옵션매수"
+  swapPur: "스왑매수"
+  publicColSrpAmt: "공모주"
+  notIcmDivAmt: "미수배당"
+  trustPrfAmt: "신탁수익권"
+  liquidAssPrf: "유동자산"
