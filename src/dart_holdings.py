@@ -15,7 +15,16 @@ from holdings_parse import parse_holdings_html
 DART_LIST_URL = "https://opendart.fss.or.kr/api/list.json"
 DART_DOCUMENT_URL = "https://opendart.fss.or.kr/api/document.xml"
 
-_REPORT_KEYWORDS = ("운용보고", "운용 보고", "집합투자", "투자설명", "결산", "보고서")
+_REPORT_KEYWORDS = (
+    "운용보고",
+    "운용 보고",
+    "집합투자",
+    "투자설명",
+    "일괄신고",
+    "결산",
+    "보고서",
+    "증권발행",
+)
 
 
 def _api_key() -> str:
@@ -53,6 +62,26 @@ def _fund_name_tokens(fnd_nm: str) -> list[str]:
     return out
 
 
+def _report_match_score(report_nm: str, fnd_nm: str, tokens: list[str]) -> int:
+    rn = report_nm.replace(" ", "")
+    if "TDF2050" in fnd_nm.upper() and "TDF2050" not in rn:
+        return 0
+    if "미래에셋" in fnd_nm and "미래에셋" not in report_nm:
+        return 0
+    core = "전략배분적격TDF2050"
+    if core in fnd_nm.replace("-", "").replace(" ", "") and core not in rn:
+        if "적격" in fnd_nm and "적격" not in report_nm:
+            return 0
+    score = sum(len(t) for t in tokens if t in rn)
+    if core in rn:
+        score += 80
+    if "운용보고" in report_nm:
+        score += 40
+    if score == 0 and fnd_nm[:8] in report_nm:
+        score = 8
+    return score
+
+
 def search_fund_disclosure_rcept_no(
     *,
     fnd_nm: str,
@@ -67,7 +96,8 @@ def search_fund_disclosure_rcept_no(
     tokens = _fund_name_tokens(fnd_nm)
     best = ""
     best_dt = ""
-    for page in range(1, 25):
+    best_score = 0
+    for page in range(1, 70):
         params: dict[str, str | int] = {
             "crtfc_key": key,
             "bgn_de": bgn,
@@ -91,10 +121,11 @@ def search_fund_disclosure_rcept_no(
             rcept_dt = str(item.get("rcept_dt") or "")
             if not any(k in report_nm for k in _REPORT_KEYWORDS):
                 continue
-            if tokens and not any(t in report_nm.replace(" ", "") for t in tokens):
-                if fnd_nm and fnd_nm[:6] not in report_nm:
-                    continue
-            if rcept_dt >= best_dt:
+            score = _report_match_score(report_nm, fnd_nm, tokens)
+            if score <= 0:
+                continue
+            if score > best_score or (score == best_score and rcept_dt >= best_dt):
+                best_score = score
                 best_dt = rcept_dt
                 best = str(item.get("rcept_no") or "")
         if page >= int(data.get("total_page") or 1):
