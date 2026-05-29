@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import re
 from typing import Any
 
@@ -207,6 +208,70 @@ def _parse_holdings_plaintext(
 
 def holdings_manifest(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return [{k: r.get(k, "") for k in HOLDING_MANIFEST_KEYS} for r in rows]
+
+
+def report_text_fingerprint(text: str, *, sample_len: int = 12000) -> str:
+    """Stable id for disclosure body — skip duplicate Gemini on same document."""
+    normalized = re.sub(r"\s+", " ", (text or "").strip())[:sample_len]
+    return hashlib.sha256(normalized.encode("utf-8", errors="replace")).hexdigest()[:16]
+
+
+def _parse_weight_pct(raw: str) -> float | None:
+    try:
+        return float(str(raw).replace("%", "").replace(",", "").strip())
+    except ValueError:
+        return None
+
+
+_NOISE_NAME_RE = re.compile(
+    r"^(\d{4}\.|\(전\s*화\)|\[?\d+[_\]]\d*[_\]]?|originalamt|issuecnt)",
+    re.IGNORECASE,
+)
+_PHONE_RE = re.compile(r"02[-\s]?\d{3,4}|1577|3774|8235")
+
+
+def is_plausible_holding_row(name: str, weight_pct: str) -> bool:
+    name = (name or "").strip()
+    if len(name) < 2 or name in ("종목명", "합계", "계", "소계"):
+        return False
+    if _NOISE_NAME_RE.search(name) or _PHONE_RE.search(name):
+        return False
+    if re.fullmatch(r"[\d.\s\[\]_\-]+", name):
+        return False
+    if not re.search(r"[가-힣A-Za-z]{2}", name):
+        return False
+    w = _parse_weight_pct(weight_pct)
+    if w is None or w <= 0 or w > 100:
+        return False
+    return True
+
+
+def holdings_look_valid(holdings: list[dict[str, Any]]) -> bool:
+    """
+    Reject parser noise (phone numbers, dates, weights >100%).
+    Used to trigger Gemini fallback when HTML rules return garbage rows.
+    """
+    if not holdings:
+        return False
+    plausible = [
+        h
+        for h in holdings
+        if is_plausible_holding_row(str(h.get("name", "")), str(h.get("weight_pct", "")))
+    ]
+    if not plausible:
+        return False
+    if len(plausible) < max(1, len(holdings) // 2):
+        return False
+    weights = [_parse_weight_pct(str(h.get("weight_pct", ""))) for h in plausible]
+    weights = [w for w in weights if w is not None]
+    if weights and sum(weights) > 150:
+        return False
+    return True
+
+
+def filter_valid_holdings(holdings: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Keep rows only if the list passes holdings_look_valid; else []."""
+    return holdings if holdings_look_valid(holdings) else []
 
 
 # Back-compat alias

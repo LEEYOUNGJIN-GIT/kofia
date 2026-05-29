@@ -10,7 +10,12 @@ from xml.etree import ElementTree as ET
 import requests
 
 from dis_client import DisProframeClient
-from holdings_parse import rows_to_holdings
+from holdings_parse import (
+    filter_valid_holdings,
+    holdings_look_valid,
+    report_text_fingerprint,
+    rows_to_holdings,
+)
 
 try:
     import pdfplumber
@@ -70,9 +75,11 @@ def fetch_holdings_so(
             code = root.find(".//{*}pfmResponseCode")
             if code is not None and code.text and code.text not in ("", "0"):
                 continue
-            holdings = rows_to_holdings(
-                _parse_list_nodes(root),
-                source=f"dis_proframe:{svc}",
+            holdings = filter_valid_holdings(
+                rows_to_holdings(
+                    _parse_list_nodes(root),
+                    source=f"dis_proframe:{svc}",
+                )
             )
             if holdings:
                 return holdings, "so"
@@ -82,7 +89,6 @@ def fetch_holdings_so(
     return [], "unavailable"
 
 
-# Back-compat aliases
 fetch_top10_so = fetch_holdings_so
 
 
@@ -111,14 +117,17 @@ def fetch_holdings_gemini(
     report_text: str,
     srtn_cd: str,
     bas_dt: str,
+    source: str = "kofia:gemini",
 ) -> tuple[list[dict[str, Any]], str]:
     from gemini_extract import extract_holdings_from_report_text
 
-    rows = extract_holdings_from_report_text(
-        report_text,
-        srtn_cd=srtn_cd,
-        bas_dt=bas_dt,
-        source="kofia:gemini",
+    rows = filter_valid_holdings(
+        extract_holdings_from_report_text(
+            report_text,
+            srtn_cd=srtn_cd,
+            bas_dt=bas_dt,
+            source=source,
+        )
     )
     return (rows, "gemini") if rows else ([], "unavailable")
 
@@ -161,6 +170,16 @@ def resolve_report_text_from_ann(
         return ""
 
 
+def _finalize_holdings(
+    holdings: list[dict[str, Any]],
+    status: str,
+    source: str,
+) -> tuple[list[dict[str, Any]], str, str] | None:
+    if holdings and holdings_look_valid(holdings):
+        return holdings, status, source
+    return None
+
+
 def resolve_holdings(
     client: DisProframeClient,
     *,
@@ -174,8 +193,8 @@ def resolve_holdings(
     use_funddoctor: bool = False,
 ) -> tuple[list[dict[str, Any]], str, str]:
     """
-    Fallback: KOFIA SO → KOFIA report+Gemini → DART → funddoctor.
-    Returns (holdings, status, source_label).
+    Fallback: KOFIA SO → KOFIA report+Gemini → DART (+Gemini) → funddoctor (+Gemini).
+    Parser noise triggers next step; duplicate Gemini skipped when report body matches KOFIA ann.
     """
     holdings, status = fetch_holdings_so(
         client,
@@ -183,11 +202,12 @@ def resolve_holdings(
         bs=bs,
         srtn_cd=srtn_cd,
     )
-    if holdings:
-        src = holdings[0].get("source", "dis_proframe")
-        return holdings, status, src
+    done = _finalize_holdings(holdings, status, holdings[0].get("source", "dis_proframe") if holdings else "")
+    if done:
+        return done
 
     bas_dt = period.get("standardDt", "")
+    kofia_gemini_fingerprint: str | None = None
 
     if use_gemini:
         report_text = resolve_report_text_from_ann(
@@ -196,13 +216,16 @@ def resolve_holdings(
             standard_dt=bas_dt,
         )
         if report_text:
+            kofia_gemini_fingerprint = report_text_fingerprint(report_text)
             holdings, status = fetch_holdings_gemini(
                 report_text=report_text,
                 srtn_cd=srtn_cd,
                 bas_dt=bas_dt,
+                source="kofia:gemini",
             )
-            if holdings:
-                return holdings, status, "kofia:gemini"
+            done = _finalize_holdings(holdings, status, "kofia:gemini")
+            if done:
+                return done
 
     if use_dart:
         from dart_holdings import fetch_holdings_dart
@@ -213,10 +236,15 @@ def resolve_holdings(
             bas_dt=bas_dt,
             corp_code=str(fund.get("dart_corp_code") or ""),
             use_gemini=use_gemini,
+            skip_gemini_if_fingerprint=kofia_gemini_fingerprint,
         )
-        if holdings:
-            src = holdings[0].get("source", "dart")
-            return holdings, status, src
+        done = _finalize_holdings(
+            holdings,
+            status,
+            holdings[0].get("source", "dart") if holdings else "",
+        )
+        if done:
+            return done
 
     if use_funddoctor:
         from funddoctor_holdings import fetch_holdings_funddoctor
@@ -233,9 +261,14 @@ def resolve_holdings(
             use_gemini=use_gemini,
             srtn_cd=srtn_cd,
             bas_dt=bas_dt,
+            skip_gemini_if_fingerprint=kofia_gemini_fingerprint,
         )
-        if holdings:
-            src = holdings[0].get("source", "funddoctor")
-            return holdings, status, src
+        done = _finalize_holdings(
+            holdings,
+            status,
+            holdings[0].get("source", "funddoctor") if holdings else "",
+        )
+        if done:
+            return done
 
     return [], "unavailable", ""

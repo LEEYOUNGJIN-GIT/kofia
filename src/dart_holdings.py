@@ -10,7 +10,12 @@ from typing import Any
 
 import requests
 
-from holdings_parse import parse_holdings_html
+from holdings_parse import (
+    filter_valid_holdings,
+    holdings_look_valid,
+    parse_holdings_html,
+    report_text_fingerprint,
+)
 
 DART_LIST_URL = "https://opendart.fss.or.kr/api/list.json"
 DART_DOCUMENT_URL = "https://opendart.fss.or.kr/api/document.xml"
@@ -169,8 +174,9 @@ def fetch_holdings_dart(
     bas_dt: str = "",
     corp_code: str = "",
     use_gemini: bool = False,
+    skip_gemini_if_fingerprint: str | None = None,
 ) -> tuple[list[dict[str, Any]], str]:
-    """Return (holdings, status). status: dart | unavailable."""
+    """Return (holdings, status). Rule parse first; optional Gemini if empty or invalid."""
     rcept_no = search_fund_disclosure_rcept_no(
         fnd_nm=fnd_nm,
         bas_dt=bas_dt,
@@ -183,14 +189,28 @@ def fetch_holdings_dart(
     if not text:
         return [], "unavailable"
 
-    holdings = parse_holdings_html(text, source=f"dart:{rcept_no}")
-    if not holdings and use_gemini:
+    source = f"dart:{rcept_no}"
+    holdings = filter_valid_holdings(parse_holdings_html(text, source=source))
+
+    need_gemini = use_gemini and not holdings
+    if need_gemini and skip_gemini_if_fingerprint:
+        if report_text_fingerprint(text) == skip_gemini_if_fingerprint:
+            need_gemini = False
+
+    if need_gemini:
         from gemini_extract import extract_holdings_from_report_text
 
-        holdings = extract_holdings_from_report_text(
-            text,
-            srtn_cd=srtn_cd,
-            bas_dt=bas_dt,
-            source="dart:gemini",
+        holdings = filter_valid_holdings(
+            extract_holdings_from_report_text(
+                text,
+                srtn_cd=srtn_cd,
+                bas_dt=bas_dt,
+                source="dart:gemini",
+            )
         )
-    return (holdings, "dart") if holdings else ([], "unavailable")
+        if holdings:
+            return holdings, "dart"
+
+    if holdings and holdings_look_valid(holdings):
+        return holdings, "dart"
+    return [], "unavailable"

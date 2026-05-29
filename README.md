@@ -24,7 +24,7 @@
 | [sync-and-fetch.yml](.github/workflows/sync-and-fetch.yml) | sync + **전체 펀드** fetch |
 | [test.yml](.github/workflows/test.yml) | pytest |
 
-`use_gemini` / `use_dart` / `use_funddoctor` — 보유내역 fallback (순서: KOFIA SO → Gemini → DART → funddoctor).
+`use_gemini` / `use_dart` / `use_funddoctor` — 보유내역 fallback (아래 참고).
 
 ## 로컬
 
@@ -42,7 +42,12 @@ python -m pytest tests/ -q
 
 ## 보유내역 · 가격 추세
 
-- **holdings** — 공시 표 전체(10개 고정 아님). fallback: SO → KOFIA+Gemini → DART → funddoctor
+- **holdings** — 공시 표 전체(가변 길이). **fallback 순서**
+  1. KOFIA ProFrame SO
+  2. (`--gemini`) KOFIA 첨부 PDF/HTML → Gemini
+  3. (`--dart`) DART 원본 → HTML 파서 → 실패/노이즈 시 Gemini (KOFIA와 **동일 본문**이면 Gemini 생략)
+  4. (`--funddoctor`) funddoctor HTML → 동일
+- HTML 파서가 전화번호·날짜 등 **노이즈만** 잡으면 빈 결과로 보고 다음 단계 또는 Gemini 시도
 - **top10_bs** — 결산 BS 계정 상위(프록시, 항상)
 - **price_trend** — `DISFundStdPriceSO` 월말 `tmpV30` 다회 조회
 

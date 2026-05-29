@@ -17,6 +17,11 @@ JSON field: `holdings` (array, `holdings_count`). `top10` is a deprecated alias 
 
 Code: [`src/dis_holdings.py`](../src/dis_holdings.py) → `resolve_holdings()`.
 
+### Quality & Gemini dedup
+
+- [`holdings_parse.holdings_look_valid`](../src/holdings_parse.py) — 비중 0–100%, 종목명 휴리스틱; 노이즈면 다음 단계
+- KOFIA 첨부 본문 fingerprint 저장 → DART/funddoctor Gemini 시 **동일 본문**이면 API 재호출 생략
+
 ## ProFrame (step 1)
 
 | SO | fn | inDto |

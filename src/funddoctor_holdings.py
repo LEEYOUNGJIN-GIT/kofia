@@ -6,7 +6,12 @@ from typing import Any
 
 import requests
 
-from holdings_parse import parse_holdings_html
+from holdings_parse import (
+    filter_valid_holdings,
+    holdings_look_valid,
+    parse_holdings_html,
+    report_text_fingerprint,
+)
 
 FUNDDOCTOR_REPORT_URL = (
     "https://file.funddoctor.co.kr/app/file_download.asp"
@@ -21,6 +26,7 @@ def fetch_holdings_funddoctor(
     use_gemini: bool = False,
     srtn_cd: str = "",
     bas_dt: str = "",
+    skip_gemini_if_fingerprint: str | None = None,
 ) -> tuple[list[dict[str, Any]], str]:
     if not memb_cd or not pfund_cd:
         return [], "unavailable"
@@ -36,14 +42,28 @@ def fetch_holdings_funddoctor(
     except Exception:
         return [], "unavailable"
 
-    holdings = parse_holdings_html(html, source=f"funddoctor:{pfund_cd}")
-    if not holdings and use_gemini:
+    source = f"funddoctor:{pfund_cd}"
+    holdings = filter_valid_holdings(parse_holdings_html(html, source=source))
+
+    need_gemini = use_gemini and not holdings
+    if need_gemini and skip_gemini_if_fingerprint:
+        if report_text_fingerprint(html) == skip_gemini_if_fingerprint:
+            need_gemini = False
+
+    if need_gemini:
         from gemini_extract import extract_holdings_from_report_text
 
-        holdings = extract_holdings_from_report_text(
-            html,
-            srtn_cd=srtn_cd,
-            bas_dt=bas_dt,
-            source="funddoctor:gemini",
+        holdings = filter_valid_holdings(
+            extract_holdings_from_report_text(
+                html,
+                srtn_cd=srtn_cd,
+                bas_dt=bas_dt,
+                source="funddoctor:gemini",
+            )
         )
-    return (holdings, "funddoctor") if holdings else ([], "unavailable")
+        if holdings:
+            return holdings, "funddoctor"
+
+    if holdings and holdings_look_valid(holdings):
+        return holdings, "funddoctor"
+    return [], "unavailable"
