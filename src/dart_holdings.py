@@ -22,22 +22,35 @@ def _api_key() -> str:
     return os.environ.get("OPENDART_API_KEY", "").strip()
 
 
-def _search_window(bas_dt: str, *, months_back: int = 6) -> tuple[str, str]:
-    raw = (bas_dt or "").replace("-", "")[:8]
-    if len(raw) == 8 and raw.isdigit():
-        end = datetime.strptime(raw, "%Y%m%d").replace(tzinfo=timezone.utc)
-    else:
-        end = datetime.now(timezone.utc)
-    start = end - timedelta(days=31 * months_back)
+def _search_window(_bas_dt: str = "") -> tuple[str, str]:
+    """OpenDART list API without corp_code: rolling ~3 calendar months ending today."""
+    end = datetime.now(timezone.utc)
+    # 89 days keeps within DART's 3-month cap (92+ often returns status 100).
+    start = end - timedelta(days=89)
     return start.strftime("%Y%m%d"), end.strftime("%Y%m%d")
 
 
 def _fund_name_tokens(fnd_nm: str) -> list[str]:
     nm = fnd_nm.replace(" ", "")
-    tokens = [nm[:12], nm[:8]] if nm else []
-    if len(nm) > 15:
-        tokens.append(nm[:15])
-    return [t for t in tokens if len(t) >= 4]
+    tokens: list[str] = []
+    if nm:
+        tokens.extend([nm[:15], nm[:12], nm[:8]])
+    upper = fnd_nm.upper()
+    for tag in ("TDF2050", "TDF2040", "TDF2060", "TDF"):
+        if tag in upper:
+            tokens.append(tag)
+    if "적격" in fnd_nm and "TDF" in upper:
+        tokens.append("적격TDF2050")
+        tokens.append("전략배분적격")
+    if "미래에셋" in fnd_nm:
+        tokens.append("미래에셋")
+    seen: set[str] = set()
+    out: list[str] = []
+    for t in tokens:
+        if len(t) >= 4 and t not in seen:
+            seen.add(t)
+            out.append(t)
+    return out
 
 
 def search_fund_disclosure_rcept_no(
@@ -54,7 +67,7 @@ def search_fund_disclosure_rcept_no(
     tokens = _fund_name_tokens(fnd_nm)
     best = ""
     best_dt = ""
-    for page in range(1, 6):
+    for page in range(1, 25):
         params: dict[str, str | int] = {
             "crtfc_key": key,
             "bgn_de": bgn,
