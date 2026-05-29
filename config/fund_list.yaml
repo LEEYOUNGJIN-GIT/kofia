@@ -1,3 +1,5 @@
+source: docs/holdings_fund_list.md
+synced_at: '2026-05-29T03:57:47.948590+00:00'
 funds:
 - srtn_cd: ''
   alias: F01_한국투자미국배당귀족증권자H_주식_C_e
@@ -92,7 +94,7 @@ funds:
 - srtn_cd: ''
   alias: F19_미래에셋로저스Commodity인덱스특별자C
   fnd_nm: 미래에셋로저스Commodity인덱스특별자C-e
-  fnd_tp: 기타
+  fnd_tp: 기타/원자재
   enabled: false
 - srtn_cd: ''
   alias: F20_카디안미국투자적격회사채자_H_C_E
@@ -152,7 +154,7 @@ funds:
 - srtn_cd: ''
   alias: F31_유경플레인바닐라글로벌리츠부동산자Ce
   fnd_nm: 유경플레인바닐라글로벌리츠부동산자Ce
-  fnd_tp: 리츠
+  fnd_tp: 부동산/리츠
   enabled: false
 - srtn_cd: ''
   alias: F32_삼성누버거버먼미국리츠H_REITs재간접_Ce
@@ -167,5 +169,5 @@ funds:
 - srtn_cd: ''
   alias: F34_카디안미국뱅크론특별자산자_H_C_E
   fnd_nm: 카디안미국뱅크론특별자산자(H)C-E
-  fnd_tp: 채권
+  fnd_tp: 채권/특별자산
   enabled: false

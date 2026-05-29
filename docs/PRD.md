@@ -104,9 +104,11 @@
 ### 7.1 흐름
 
 ```
-config/fund_list.yaml → dis_parser.py → data/timeseries/*.csv
-                              ↑
-                    GitHub Actions (분기 cron / workflow_dispatch)
+docs/holdings_fund_list.md → fund_list_sync.py → config/fund_list.yaml
+                                                      ↓
+                                            dis_parser.py → data/timeseries/*.csv
+                                                      ↑
+                                    GitHub Actions (holdings push / workflow_dispatch)
 ```
 
 - **일배치 없음** — 분기 공시·수동 백필만.
@@ -126,18 +128,22 @@ config/fund_list.yaml → dis_parser.py → data/timeseries/*.csv
 
 ```
 Kofia/
+├── docs/
+│   └── holdings_fund_list.md  # 펀드 마스터 (운영자 편집)
 ├── config/
-│   ├── fund_list.yaml
-│   └── asset_class_map.yaml   # 공시 표기 → canonical 자산군
+│   ├── fund_list.yaml         # sync 자동 생성
+│   └── asset_class_map.yaml
 ├── src/
+│   ├── fund_list_sync.py
 │   ├── dis_parser.py
-│   └── fund_lookup.py         # (선택)
-├── tests/fixtures/            # 샘플 공시 + golden CSV
-├── data/
-│   ├── timeseries/
-│   ├── archive/               # (선택) {alias}/{bas_dt}/
-│   └── logs/                  # run_{date}.json
-├── .github/workflows/fetch-allocation.yml
+│   └── resolve_srtn.py        # (선택)
+├── tests/
+├── data/timeseries/
+├── .github/workflows/
+│   ├── sync-and-fetch.yml     # holdings 변경 → sync → fetch
+│   ├── kofia-fetch.yml        # 코드 변경 → test → fetch
+│   ├── verify-dis.yml
+│   └── test.yml
 └── requirements.txt
 ```
 
@@ -376,7 +382,8 @@ G1~G2 미통과 시 M1 착수 보류 — Playwright 대신 §7.10.2 대안 1~3 �
 |------|------|
 | `docs/PRD.md` | **본 문서** — 요구사항·아키텍처·구현 참고 |
 | `docs/holdings_fund_list.md` | 보유 펀드 **목록·유형·코드 작업표** |
-| `config/fund_list.yaml` | (구현 예정) **실행 설정** |
+| `docs/holdings_fund_list.md` | **펀드 마스터** (편집 후 sync) |
+| `config/fund_list.yaml` | **실행 설정** (`fund_list_sync.py` 출력) |
 | `config/asset_class_map.yaml` | (구현 예정) 자산군 정규화 |
 
 ---

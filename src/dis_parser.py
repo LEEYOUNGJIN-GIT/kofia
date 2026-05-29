@@ -457,11 +457,23 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--backfill", type=int, help="Backfill last N quarters")
     parser.add_argument("--alias", help="Single fund alias")
     parser.add_argument("--all-funds", action="store_true", help="Process all funds in yaml (not only enabled)")
+    parser.add_argument("--sync", action="store_true", help="Sync holdings.md → fund_list.yaml first")
     parser.add_argument("--dry-run", action="store_true", help="ProFrame connectivity only (G1)")
     parser.add_argument("--fetch", action="store_true", help="Fetch registry, allocation, top10 (G2)")
     parser.add_argument("--gemini", action="store_true", help="Optional Gemini pass (needs GEMINI_API_KEY)")
     parser.add_argument("--config", type=Path, default=CONFIG_PATH)
     args = parser.parse_args(argv)
+
+    if args.sync:
+        from fund_list_sync import sync_holdings_to_yaml, write_yaml
+
+        result = sync_holdings_to_yaml()
+        write_yaml(result["payload"])
+        print(
+            f"Synced fund_list.yaml: {result['parsed_count']} funds, "
+            f"{result['active_count']} enabled",
+            file=sys.stderr,
+        )
 
     quarters: list[str] | None = None
     if args.from_quarter and args.to_quarter:
@@ -482,8 +494,10 @@ def main(argv: list[str] | None = None) -> int:
             all_funds=args.all_funds,
         )
         suffix = "fetch"
+    elif args.sync:
+        return 0
     else:
-        print("Specify --dry-run or --fetch", file=sys.stderr)
+        print("Specify --dry-run, --fetch, or --sync", file=sys.stderr)
         return 2
 
     LOG_DIR.mkdir(parents=True, exist_ok=True)

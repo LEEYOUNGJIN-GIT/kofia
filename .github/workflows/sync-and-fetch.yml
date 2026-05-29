@@ -1,42 +1,44 @@
-name: Kofia fetch (code push)
-
-# src/config 변경 시: holdings 동기화 후 enabled 펀드 fetch
+name: Sync fund list and fetch
 
 on:
   workflow_dispatch:
     inputs:
+      sync_only:
+        description: "Only sync holdings.md → fund_list.yaml (skip fetch)"
+        type: boolean
+        default: false
       alias:
-        description: "Single fund alias (empty = all enabled)"
+        description: "Single fund alias (empty = all enabled in fund_list.yaml)"
         required: false
         default: ""
       quarter:
         description: "Quarter e.g. 2025Q3 (optional)"
         required: false
         default: ""
-      use_gemini:
-        description: "Run optional Gemini pass"
+      commit_config:
+        description: "Commit updated fund_list.yaml when sync changes it"
+        type: boolean
+        default: true
+      commit_data:
+        description: "Commit timeseries CSV after fetch"
         type: boolean
         default: false
-      commit_data:
-        description: "Commit timeseries CSV to repo"
+      use_gemini:
+        description: "Optional Gemini pass on fetch"
         type: boolean
         default: false
   push:
     branches: [main, master]
     paths:
-      - "src/**"
-      - "config/asset_class_map.yaml"
-      - ".github/workflows/**"
-      - "requirements.txt"
-      - "tests/**"
+      - "docs/holdings_fund_list.md"
 
 permissions:
   contents: write
 
 jobs:
-  fetch:
+  pipeline:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
@@ -50,15 +52,25 @@ jobs:
       - name: Sync holdings → fund_list.yaml
         run: python src/fund_list_sync.py
 
-      - name: Run tests
-        run: python -m pytest tests/ -q
+      - name: Commit fund_list.yaml (if changed)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add config/fund_list.yaml
+          if git diff --staged --quiet; then
+            echo "fund_list.yaml unchanged"
+          else
+            git commit -m "chore(config): sync fund list from holdings"
+            git push
+          fi
 
-      - name: Fetch dis data (HTTP)
+      - name: Fetch dis data (enabled funds)
+        if: github.event_name == 'push' || github.event.inputs.sync_only != 'true'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           ARGS="src/dis_parser.py --fetch"
-          if [ -n "${{ github.event.inputs.alias }}" ]; then
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.alias }}" ]; then
             ARGS="$ARGS --alias ${{ github.event.inputs.alias }}"
           fi
           if [ -n "${{ github.event.inputs.quarter }}" ]; then
@@ -70,23 +82,26 @@ jobs:
           python $ARGS
 
       - name: Commit timeseries (if enabled)
-        if: github.event.inputs.commit_data == 'true'
+        if: |
+          (github.event_name == 'push') ||
+          (github.event_name == 'workflow_dispatch' && github.event.inputs.commit_data == 'true')
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/timeseries data/logs
           if git diff --staged --quiet; then
-            echo "No data changes to commit"
+            echo "No data changes"
           else
             git commit -m "chore(data): dis fetch $(date -u +%Y%m%d)"
             git push
           fi
 
       - name: Upload artifacts
-        if: always()
+        if: always() && (github.event_name == 'push' || github.event.inputs.sync_only != 'true')
         uses: actions/upload-artifact@v4
         with:
-          name: kofia-fetch-${{ github.run_id }}
+          name: kofia-pipeline-${{ github.run_id }}
           path: |
+            config/fund_list.yaml
             data/timeseries/*.csv
             data/logs/run_*_fetch.json

@@ -1,4 +1,4 @@
-name: Verify dis.kofia (M0.5)
+name: Verify dis.kofia (G1)
 
 on:
   workflow_dispatch:
@@ -7,12 +7,13 @@ on:
     paths:
       - "src/**"
       - "config/**"
+      - "docs/holdings_fund_list.md"
       - ".github/workflows/verify-dis.yml"
 
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
@@ -23,8 +24,14 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: M0.5 dry-run (G1)
-        run: python src/dis_parser.py --dry-run --alias TDF2050_Ce
+      - name: Sync fund list
+        run: python src/fund_list_sync.py
+
+      - name: Unit tests
+        run: python -m pytest tests/ -q
+
+      - name: G1 dry-run (first enabled fund)
+        run: python src/dis_parser.py --dry-run
 
       - name: Upload run manifest
         if: always()
