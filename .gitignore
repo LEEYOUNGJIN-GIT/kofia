@@ -12,6 +12,8 @@ scripts/
 data/logs/
 data/timeseries/*.csv
 !data/timeseries/.gitkeep
+data/reports/*.json
+!data/reports/.gitkeep
 
 # IDE
 .idea/

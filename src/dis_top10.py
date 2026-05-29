@@ -7,6 +7,17 @@ from typing import Any
 from dis_quarterly import load_asset_class_map
 
 
+def top10_bs_from_bs(
+    bs: dict[str, str],
+    *,
+    srtn_cd: str,
+    alias: str,
+    report_type: str = "settlement_bs_top10_proxy",
+) -> list[dict[str, Any]]:
+    """Alias for BS account-line top10."""
+    return top10_from_bs(bs, srtn_cd=srtn_cd, alias=alias, report_type=report_type)
+
+
 def top10_from_bs(
     bs: dict[str, str],
     *,
